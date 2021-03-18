@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c45e4cfa-f457-4537-91d4-9e264bd0d235" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="userSettingsFile" value="$USER_HOME$/.m2/58settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1me4odoaaZU6sjpTAmR0D2R12SW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol" />
+      <recent name="$PROJECT_DIR$/mykafka/src/main/resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.hxm.requests" />
+      <recent name="com.hxm.protocol" />
+      <recent name="com.hxm.producer" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ClassGenerate">
+    <configuration name="ClassGenerate" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.ClassGenerate" />
+      <module name="asm" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.hxm.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ClassPrinter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.ClassPrinter" />
+      <module name="asm" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.example.Client" />
+      <module name="mykafka" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.hxm.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NetworkClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.clients.NetworkClient" />
+      <module name="mykafka" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.hxm.clients.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.example.Server" />
+      <module name="mykafka" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.hxm.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ZKServer" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.ZKServer" />
+      <module name="zookeeper-sample" />
+      <option name="PROGRAM_PARAMETERS" value="addr2" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.ZKServer" />
+      <item itemvalue="Application.NetworkClient" />
+      <item itemvalue="Application.ClassPrinter" />
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Client" />
+      <item itemvalue="Application.ClassGenerate" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ClassGenerate" />
+        <item itemvalue="Application.Client" />
+        <item itemvalue="Application.Server" />
+        <item itemvalue="Application.NetworkClient" />
+        <item itemvalue="Application.ClassPrinter" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c45e4cfa-f457-4537-91d4-9e264bd0d235" name="Default Changelist" comment="" />
+      <created>1609840901956</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1609840901956</updated>
+      <workItem from="1609840903146" duration="1860000" />
+      <workItem from="1609846780249" duration="2730000" />
+      <workItem from="1609898813611" duration="36000" />
+      <workItem from="1609934022630" duration="2026000" />
+      <workItem from="1610364431214" duration="2756000" />
+      <workItem from="1610416838098" duration="42000" />
+      <workItem from="1610970011964" duration="563000" />
+      <workItem from="1611318161668" duration="1302000" />
+      <workItem from="1611368464156" duration="5445000" />
+      <workItem from="1611541632202" duration="287000" />
+      <workItem from="1611555395634" duration="4946000" />
+      <workItem from="1611749306803" duration="661000" />
+      <workItem from="1612232281529" duration="8400000" />
+      <workItem from="1612319181221" duration="14215000" />
+      <workItem from="1612528018268" duration="76000" />
+      <workItem from="1612528220077" duration="133000" />
+      <workItem from="1612582564369" duration="5980000" />
+      <workItem from="1612791351196" duration="12267000" />
+      <workItem from="1613616988395" duration="4461000" />
+      <workItem from="1613701097823" duration="19222000" />
+      <workItem from="1613787268213" duration="18790000" />
+      <workItem from="1613960554224" duration="7470000" />
+      <workItem from="1613981047472" duration="18187000" />
+      <workItem from="1614046407457" duration="21472000" />
+      <workItem from="1614132785331" duration="10522000" />
+      <workItem from="1614305311770" duration="2534000" />
+      <workItem from="1614481033346" duration="36260000" />
+      <workItem from="1614671541626" duration="10523000" />
+      <workItem from="1614737312060" duration="22992000" />
+      <workItem from="1614823587912" duration="5154000" />
+      <workItem from="1614909855277" duration="10779000" />
+      <workItem from="1615169725959" duration="23992000" />
+      <workItem from="1615255902785" duration="8267000" />
+      <workItem from="1615342125164" duration="14743000" />
+      <workItem from="1615443565826" duration="9397000" />
+      <workItem from="1615514880608" duration="20822000" />
+      <workItem from="1615776900439" duration="17747000" />
+      <workItem from="1615880512558" duration="625000" />
+      <workItem from="1615882966586" duration="3721000" />
+      <workItem from="1615886729101" duration="11712000" />
+      <workItem from="1615950326068" duration="22656000" />
+      <workItem from="1616033431372" duration="17539000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint type="java-exception">
+          <properties class="java.io.IOException" package="java.io" />
+          <option name="timeStamp" value="41" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="77" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/message/Message.java</url>
+          <line>47</line>
+          <properties field="KeySizeLength" class="com.hxm.message.Message" />
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/message/ByteBufferMessageSet.java</url>
+          <line>195</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/message/ByteBufferMessageSet.java</url>
+          <line>37</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.hxm.protocol.Field" memberName="schema" />
+        <PinnedItemInfo parentTag="com.hxm.requests.ProduceRequest" memberName="struct" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/myproject$TestDemo.ic" NAME="TestDemo Coverage Results" MODIFIED="1612802545996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.hxm.test.*</FILTER>
+    </SUITE>
+  </component>
+</project>

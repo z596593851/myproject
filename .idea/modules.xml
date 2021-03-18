@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/asm/asm.iml" filepath="$PROJECT_DIR$/asm/asm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kafka-sample/kafka-sample.iml" filepath="$PROJECT_DIR$/kafka-sample/kafka-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mykafka/mykafka.iml" filepath="$PROJECT_DIR$/mykafka/mykafka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/myproject.iml" filepath="$PROJECT_DIR$/.idea/myproject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zookeeper-sample/zookeeper-sample.iml" filepath="$PROJECT_DIR$/zookeeper-sample/zookeeper-sample.iml" />
+    </modules>
+  </component>
+</project>
