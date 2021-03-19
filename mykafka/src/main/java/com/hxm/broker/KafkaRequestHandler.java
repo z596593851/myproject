@@ -1,7 +1,12 @@
 package com.hxm.broker;
 
+import com.hxm.consumer.FetchRequest;
+import com.hxm.consumer.FetchResponse;
+import com.hxm.consumer.FetchResponsePartitionData;
+import com.hxm.consumer.PartitionFetchInfo;
 import com.hxm.message.ByteBufferMessageSet;
 import com.hxm.message.MessageSet;
+import com.hxm.network.FetchResponseSend;
 import com.hxm.producer.TopicPartition;
 import com.hxm.protocol.ApiKeys;
 import com.hxm.requests.ProduceRequest;
@@ -32,12 +37,15 @@ public class KafkaRequestHandler implements Runnable{
     }
 
     public void handle(RequestChannel.Request request){
-        if(ApiKeys.PRODUCE.id==request.getRequestId()){
-            handleProducerRequest(request);
+        switch (ApiKeys.forId(request.getRequestId())){
+            case PRODUCE:handleProducerRequest(request);break;
+            case FETCH:handleFetchRequest(request);break;
+            default:throw new RuntimeException("Unknown api code " + request.getRequestId());
         }
+
     }
 
-    public void handleProducerRequest(RequestChannel.Request request){
+    private void handleProducerRequest(RequestChannel.Request request){
         System.out.println("收到消息");
         ProduceRequest produceRequest=(ProduceRequest)request.getBody();
         Map<TopicPartition, ByteBufferMessageSet> authorizedMessagesPerPartition=new HashMap<>();
@@ -47,4 +55,23 @@ public class KafkaRequestHandler implements Runnable{
         replicaManager.appendMessages(authorizedMessagesPerPartition);
     }
 
+    private void handleFetchRequest(RequestChannel.Request request){
+        FetchRequest fetchRequest=null;
+        TopicPartition tp=null;
+        PartitionFetchInfo fetchInfo=null;
+        replicaManager.fetchMessages(
+                fetchRequest.getMaxWait(),
+                fetchRequest.getReplicaId(),
+                fetchRequest.getMinBytes(),
+                fetchRequest.getMaxBytes(),
+                fetchRequest.getVersionId()<2,
+                tp,
+                fetchInfo,
+                (topicPartition,data)->{
+                    FetchResponse response=new FetchResponse(fetchRequest.getCorrelationId(), tp, data, fetchRequest.getVersionId(),0);
+                    requestChannel.sendResponse(new RequestChannel.Response(request.processor(), request, new FetchResponseSend(request.connectionId, response)));
+                }
+        );
+
+    }
 }

@@ -8,7 +8,7 @@ import com.hxm.requests.RequestHeader;
 import com.hxm.test.ClientRequest;
 import com.hxm.test.ClientResponse;
 import com.hxm.test.RequestCompletionHandler;
-import com.hxm.test.RequestSend;
+import com.hxm.network.RequestSend;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

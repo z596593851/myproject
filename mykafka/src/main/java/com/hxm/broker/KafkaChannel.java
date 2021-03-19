@@ -1,18 +1,16 @@
 package com.hxm.broker;
 
-import com.hxm.test.RequestSend;
+import com.hxm.network.RequestSend;
+import com.hxm.network.Send;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.nio.channels.CancelledKeyException;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 
 public class KafkaChannel {
     private String id;
 //    private SelectionKey key;
-    private RequestSend send;
+    private Send send;
     //private SocketChannel socketChannel;
     private NetworkReceive receive;
     private final int maxReceiveSize;
@@ -32,7 +30,7 @@ public class KafkaChannel {
         this.maxReceiveSize=maxReceiveSize;
     }
 
-    public void setSend(RequestSend send) {
+    public void setSend(Send send) {
         if (this.send != null) {
             throw new IllegalStateException("Attempt to begin a send operation with prior send operation still in progress.");
         }
@@ -89,8 +87,8 @@ public class KafkaChannel {
         return result;
     }
 
-    public RequestSend write() throws IOException {
-        RequestSend result = null;
+    public Send write() throws IOException {
+        Send result = null;
         if (send != null && send(send)) {
             result = send;
             send = null;
@@ -98,7 +96,7 @@ public class KafkaChannel {
         return result;
     }
 
-    private boolean send(RequestSend send) throws IOException {
+    private boolean send(Send send) throws IOException {
         send.writeTo(transportLayer);
         if (send.completed()) {
             transportLayer.removeInterestOps(SelectionKey.OP_WRITE);

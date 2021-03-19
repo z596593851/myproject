@@ -18,4 +18,8 @@ public class LogReadResult {
     public FetchDataInfo getInfo() {
         return info;
     }
+
+    public long getHw() {
+        return hw;
+    }
 }

@@ -4,7 +4,7 @@ import com.hxm.broker.KSelector;
 import com.hxm.protocol.ApiKeys;
 import com.hxm.requests.RequestHeader;
 import com.hxm.test.ClientRequest;
-import com.hxm.test.RequestSend;
+import com.hxm.network.RequestSend;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -70,12 +70,12 @@ public class NetworkClient {
         buffer.putInt(req.getBytes().length);
         buffer.put(req.getBytes());
         buffer.rewind();
-        ClientRequest request=new ClientRequest(new RequestSend("1",buffer),null);
+//        ClientRequest request=new ClientRequest(new RequestSend("1",buffer),null);
         KSelector selector=new KSelector(102400);
         NetworkClient networkClient=new NetworkClient(selector,"1","127.0.0.1",6666);
 //        networkClient.initiateConnect();
         networkClient.poll(500);
-        networkClient.send(request);
+//        networkClient.send(request);
         networkClient.poll(500);
 //        System.out.println(buffer.getInt());
 //        System.out.println(charset.decode(buffer).toString());

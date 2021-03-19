@@ -2,6 +2,7 @@ package com.hxm.broker;
 
 import com.hxm.cluster.Partition;
 import com.hxm.cluster.Replica;
+import com.hxm.consumer.FetchResponsePartitionData;
 import com.hxm.consumer.PartitionFetchInfo;
 import com.hxm.log.Log;
 import com.hxm.log.LogManager;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ReplicaManager {
     private final LogManager logManager;
@@ -67,7 +69,7 @@ public class ReplicaManager {
         return logManager;
     }
 
-    public void fetchMessages(long timeout, int replicaId, int fetchMinBytes, int fetchMaxBytes, boolean hardMaxBytesLimit,TopicPartition tp, PartitionFetchInfo fetchInfo){
+    public void fetchMessages(long timeout, int replicaId, int fetchMinBytes, int fetchMaxBytes, boolean hardMaxBytesLimit, TopicPartition tp, PartitionFetchInfo fetchInfo, Callback<TopicPartition,FetchResponsePartitionData> callback){
         LogReadResult logReadResult=readFromLocalLog(fetchMaxBytes,hardMaxBytesLimit,tp,fetchInfo);
         // update its corresponding log end offset
         updateFollowerLogReadResults(replicaId,tp,logReadResult);
@@ -77,9 +79,10 @@ public class ReplicaManager {
         //                        3) has enough data to respond
         //                        4) some error happens while reading data
         if (timeout <= 0 || bytesReadable >= fetchMinBytes) {
+            callback.apply(tp,new FetchResponsePartitionData(logReadResult.getHw(),logReadResult.getInfo().getMessageSet()));
+        }else {
 
         }
-
     }
 
     private void updateFollowerLogReadResults(int replicaId, TopicPartition topicPartition, LogReadResult logReadResult){
@@ -114,8 +117,13 @@ public class ReplicaManager {
             }
         }
         boolean readToEndOfLog = initialLogEndOffset.getMessageOffset() - logReadInfo.getFetchOffsetMetadata().getMessageOffset() <= 0;
-        return new LogReadResult(logReadInfo,0L,fetchInfo.getFetchSize(),readToEndOfLog);
+        //暂时将hw定为LogEndOffset
+        return new LogReadResult(logReadInfo,initialLogEndOffset.getMessageOffset(),fetchInfo.getFetchSize(),readToEndOfLog);
 
+    }
+
+    public interface Callback<A,B>{
+        void apply(A a,B b);
     }
 
 

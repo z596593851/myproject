@@ -1,5 +1,7 @@
 package com.hxm.test;
 
+import com.hxm.network.RequestSend;
+
 public class ClientRequest {
     private RequestSend request;
     private RequestCompletionHandler callback;

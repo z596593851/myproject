@@ -1,5 +1,7 @@
 package com.hxm.test;
 
+import com.hxm.network.RequestSend;
+
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -39,7 +41,7 @@ public class Client {
 
     public RequestFuture<ClientResponse> send(String destination,String request){
         RequestFutureCompletionHandler completionHandler=new RequestFutureCompletionHandler();
-        put(new ClientRequest(new RequestSend(destination, ByteBuffer.wrap(request.getBytes())),completionHandler));
+//        put(new ClientRequest(new RequestSend(destination, ByteBuffer.wrap(request.getBytes())),completionHandler));
         return completionHandler.future;
     }
 

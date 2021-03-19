@@ -112,7 +112,7 @@ public class Processor extends AbstractServerThread{
     public void sendResponse(RequestChannel.Response response){
         KafkaChannel channel=selector.channel(response.send.destination());
         if(channel!=null){
-            selector.send(response.send);
+            selector.send(response.getResponseSend());
             this.inflightResponses.put(response.request.connectionId,response);
         }
     }

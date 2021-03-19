@@ -32,11 +32,13 @@ public enum ApiKeys {
 
     static {
         int maxKey = -1;
-        for (ApiKeys key : ApiKeys.values())
+        for (ApiKeys key : ApiKeys.values()) {
             maxKey = Math.max(maxKey, key.id);
+        }
         ApiKeys[] idToType = new ApiKeys[maxKey + 1];
-        for (ApiKeys key : ApiKeys.values())
+        for (ApiKeys key : ApiKeys.values()) {
             idToType[key.id] = key;
+        }
         ID_TO_TYPE = idToType;
         MAX_API_KEY = maxKey;
     }
@@ -53,9 +55,10 @@ public enum ApiKeys {
     }
 
     public static ApiKeys forId(int id) {
-        if (id < MIN_API_KEY || id > MAX_API_KEY)
+        if (id < MIN_API_KEY || id > MAX_API_KEY) {
             throw new IllegalArgumentException(String.format("Unexpected ApiKeys id `%s`, it should be between `%s` " +
                     "and `%s` (inclusive)", id, MIN_API_KEY, MAX_API_KEY));
+        }
         return ID_TO_TYPE[id];
     }
 

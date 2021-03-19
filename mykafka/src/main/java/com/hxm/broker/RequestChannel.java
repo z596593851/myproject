@@ -1,8 +1,9 @@
 package com.hxm.broker;
 
+import com.hxm.network.Send;
 import com.hxm.requests.AbstractRequest;
 import com.hxm.requests.RequestHeader;
-import com.hxm.test.RequestSend;
+import com.hxm.network.RequestSend;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -28,7 +29,6 @@ public class RequestChannel {
         public String connectionId;
         private short requestId;
 
-//        private ByteBuffer buffer;
         public Request(int processor,String connectionId,ByteBuffer buffer){
             this.processor=processor;
             this.connectionId=connectionId;
@@ -55,23 +55,27 @@ public class RequestChannel {
             return this.body;
         }
 
-//        public ByteBuffer getBuffer() {
-//            return buffer;
-//        }
     }
 
     static class Response{
         public int processor;
         public Request request;
-        public RequestSend send;
+        public Send send;
         public ResponseAction responseAction;
-        public Response(int processor, Request request, RequestSend send,ResponseAction responseAction){
+        public Response(int processor, Request request, Send send){
             this.processor=processor;
             this.request=request;
             this.send=send;
-            this.responseAction=responseAction;
+            if(send==null){
+                this.responseAction=ResponseAction.NoOpAction;
+            }else {
+                this.responseAction=ResponseAction.SendAction;
+            }
         }
 
+        public Send getResponseSend() {
+            return send;
+        }
     }
 
 

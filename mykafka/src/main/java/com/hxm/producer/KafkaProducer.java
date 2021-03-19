@@ -3,17 +3,9 @@ package com.hxm.producer;
 import com.hxm.broker.KSelector;
 import com.hxm.broker.KafkaThread;
 import com.hxm.clients.NetworkClient;
-import com.hxm.protocol.ApiKeys;
-import com.hxm.requests.ProduceRequest;
 import com.hxm.test.ClientRequest;
-import com.hxm.test.ClientResponse;
-import com.hxm.test.RequestCompletionHandler;
-import com.hxm.test.RequestSend;
 import com.sun.xml.internal.ws.encoding.soap.SerializationException;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;

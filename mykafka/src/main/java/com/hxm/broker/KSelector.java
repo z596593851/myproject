@@ -1,6 +1,7 @@
 package com.hxm.broker;
 
-import com.hxm.test.RequestSend;
+import com.hxm.network.RequestSend;
+import com.hxm.network.Send;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,7 +12,7 @@ import java.util.*;
 public class KSelector {
     private final Map<String, KafkaChannel> channels;
     private final Selector nioSelector;
-    private final List<RequestSend> completedSends;
+    private final List<Send> completedSends;
     private final List<String> failedSends;
     private final List<String> connected;
     private final Map<KafkaChannel, Deque<NetworkReceive>> stagedReceives;
@@ -126,7 +127,7 @@ public class KSelector {
             e.printStackTrace();
         }
     }
-    public void send(RequestSend send) {
+    public void send(Send send) {
         //获取一个kafkachannel
         KafkaChannel channel = this.channels.get(send.destination());
         if (channel == null) {
@@ -248,7 +249,7 @@ public class KSelector {
                 if (key.isWritable()) {
                     System.out.println("有write事件");
                     //给borker发送请求
-                    RequestSend send = channel.write();
+                    Send send = channel.write();
                     if (send != null) {
                         this.completedSends.add(send);
                     }
@@ -290,7 +291,7 @@ public class KSelector {
     public List<KafkaChannel> channels() {
         return new ArrayList<>(channels.values());
     }
-    public List<RequestSend> completedSends() {
+    public List<Send> completedSends() {
         return this.completedSends;
     }
 
