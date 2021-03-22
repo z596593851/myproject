@@ -11,7 +11,7 @@ import com.hxm.message.FetchDataInfo;
 import com.hxm.message.MessageSet;
 import com.hxm.producer.Time;
 import com.hxm.producer.TopicPartition;
-import lombok.val;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,34 +69,50 @@ public class ReplicaManager {
         return logManager;
     }
 
-    public void fetchMessages(long timeout, int replicaId, int fetchMinBytes, int fetchMaxBytes, boolean hardMaxBytesLimit, TopicPartition tp, PartitionFetchInfo fetchInfo, Callback<TopicPartition,FetchResponsePartitionData> callback){
-        LogReadResult logReadResult=readFromLocalLog(fetchMaxBytes,hardMaxBytesLimit,tp,fetchInfo);
+    public void fetchMessages(long timeout, int replicaId, int fetchMinBytes, int fetchMaxBytes, boolean hardMaxBytesLimit, List<Pair<TopicPartition, PartitionFetchInfo>> fetchInfos, Consumer<List<Pair<TopicPartition, FetchResponsePartitionData>>> responseCallback){
+        List<Pair<TopicPartition,LogReadResult>> logReadResults=readFromLocalLog(fetchMaxBytes,hardMaxBytesLimit,fetchInfos);
         // update its corresponding log end offset
-        updateFollowerLogReadResults(replicaId,tp,logReadResult);
-        int bytesReadable=logReadResult.getInfo().getMessageSet().sizeInBytes();
+        updateFollowerLogReadResults(replicaId,logReadResults);
+        int bytesReadable=logReadResults.stream().mapToInt(pair->pair.getValue().getInfo().getMessageSet().sizeInBytes()).sum();
         // respond immediately if 1) fetch request does not want to wait
         //                        2) fetch request does not require any data
         //                        3) has enough data to respond
         //                        4) some error happens while reading data
         if (timeout <= 0 || bytesReadable >= fetchMinBytes) {
-            callback.apply(tp,new FetchResponsePartitionData(logReadResult.getHw(),logReadResult.getInfo().getMessageSet()));
+            List<Pair<TopicPartition, FetchResponsePartitionData>> list=new ArrayList<>();
+            logReadResults.forEach(pair->{
+                TopicPartition tp=pair.getKey();
+                LogReadResult result=pair.getValue();
+                list.add(new Pair<>(tp,new FetchResponsePartitionData(result.getHw(),result.getInfo().getMessageSet())));
+            });
+            responseCallback.accept(list);
         }else {
-
+            System.out.println("wrong");
         }
     }
 
-    private void updateFollowerLogReadResults(int replicaId, TopicPartition topicPartition, LogReadResult logReadResult){
-        Partition partition=getPartition(topicPartition.topic(),topicPartition.partition());
-        if(partition!=null){
-            partition.updateReplicaLogReadResult(replicaId,logReadResult);
-        }else{
-            throw new RuntimeException(String.format("While recording the replica LEO, the partition %s hasn't been created.",topicPartition));
-        }
+    private void updateFollowerLogReadResults(int replicaId, List<Pair<TopicPartition,LogReadResult>> logReadResults){
+        logReadResults.forEach(pair->{
+            TopicPartition topicPartition=pair.getKey();
+            LogReadResult logReadResult=pair.getValue();
+            Partition partition=getPartition(topicPartition.topic(),topicPartition.partition());
+            if(partition!=null){
+                partition.updateReplicaLogReadResult(replicaId,logReadResult);
+            }else{
+                throw new RuntimeException(String.format("While recording the replica LEO, the partition %s hasn't been created.",topicPartition));
+            }
+        });
+
     }
 
-    public LogReadResult readFromLocalLog(int fetchMaxBytes,boolean hardMaxBytesLimit, TopicPartition tp, PartitionFetchInfo fetchInfo){
+    public List<Pair<TopicPartition,LogReadResult>> readFromLocalLog(int fetchMaxBytes,boolean hardMaxBytesLimit, List<Pair<TopicPartition, PartitionFetchInfo>> readPartitionInfo){
         this.hardMaxBytesLimit=hardMaxBytesLimit;
-        return read(tp,fetchInfo,fetchMaxBytes,!hardMaxBytesLimit);
+        List<Pair<TopicPartition,LogReadResult>> result=new ArrayList<>();
+        readPartitionInfo.forEach(pair->{
+            LogReadResult readResult=read(pair.getKey(),pair.getValue(),fetchMaxBytes,!hardMaxBytesLimit);
+            result.add(new Pair<>(pair.getKey(),readResult));
+        });
+        return result;
     }
 
     public LogReadResult read(TopicPartition tp, PartitionFetchInfo fetchInfo, int limitBytes, boolean minOneMessage){

@@ -6,20 +6,44 @@
   <component name="ChangeListManager">
     <list default="true" id="c45e4cfa-f457-4537-91d4-9e264bd0d235" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/KSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/KSelector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/KafkaChannel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/KafkaChannel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/KafkaRequestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/KafkaRequestHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/LogReadResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/LogReadResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/Processor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/ReplicaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/ReplicaManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/RequestChannel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/RequestChannel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/clients/NetworkClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/clients/NetworkClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/producer/KafkaProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/producer/KafkaProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/producer/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/producer/Sender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/ApiKeys.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/ApiKeys.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/test/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/test/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/test/ClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/test/ClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/test/RequestSend.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/network/RequestSend.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponsePartitionData.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponsePartitionData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/network/FetchResponseSend.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/network/FetchResponseSend.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/KSelector.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/KSelector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/KafkaChannel.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/KafkaChannel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/KafkaRequestHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/KafkaRequestHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/LogOffsetMetadata.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/LogOffsetMetadata.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/Processor.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/Processor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/ReplicaManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/ReplicaManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/RequestChannel$Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/RequestChannel$Response.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/RequestChannel$ResponseAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/RequestChannel$ResponseAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/RequestChannel.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/RequestChannel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/Utils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/Utils$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/Utils.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/Utils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/clients/NetworkClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/clients/NetworkClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/cluster/Partition.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/cluster/Partition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/cluster/Replica.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/cluster/Replica.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/FileMessageSet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/FileMessageSet$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/FileMessageSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/FileMessageSet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/Log$LogAppendInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/Log$LogAppendInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/Log.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/Log.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/LogManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/log/LogManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/ByteBufferMessageSet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/ByteBufferMessageSet$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/ByteBufferMessageSet$RecordsIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/ByteBufferMessageSet$RecordsIterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/ByteBufferMessageSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/ByteBufferMessageSet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/FetchDataInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/FetchDataInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/MessageSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/message/MessageSet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/producer/KafkaProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/producer/KafkaProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/producer/Sender.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/producer/Sender.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/protocol/ApiKeys.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/protocol/ApiKeys.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/Client$RequestFutureCompletionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/Client$RequestFutureCompletionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/Client.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/ClientRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/ClientRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/test/RequestSend.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +107,7 @@
       <recent name="com.hxm.producer" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ClassGenerate">
+  <component name="RunManager" selected="Application.Test">
     <configuration name="ClassGenerate" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.hxm.ClassGenerate" />
       <module name="asm" />
@@ -93,13 +117,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ClassPrinter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.hxm.ClassPrinter" />
-      <module name="asm" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -143,6 +160,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Test" />
+      <module name="mykafka" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ZKServer" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.hxm.ZKServer" />
       <module name="zookeeper-sample" />
@@ -165,18 +189,18 @@
     <list>
       <item itemvalue="Application.ZKServer" />
       <item itemvalue="Application.NetworkClient" />
-      <item itemvalue="Application.ClassPrinter" />
       <item itemvalue="Application.Server" />
       <item itemvalue="Application.Client" />
       <item itemvalue="Application.ClassGenerate" />
+      <item itemvalue="Application.Test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.ClassGenerate" />
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
         <item itemvalue="Application.NetworkClient" />
-        <item itemvalue="Application.ClassPrinter" />
       </list>
     </recent_temporary>
   </component>
@@ -230,7 +254,9 @@
       <workItem from="1615886729101" duration="11712000" />
       <workItem from="1615950326068" duration="22656000" />
       <workItem from="1616033431372" duration="17839000" />
-      <workItem from="1616120511492" duration="20073000" />
+      <workItem from="1616120511492" duration="20650000" />
+      <workItem from="1616379513164" duration="19469000" />
+      <workItem from="1616413497862" duration="4237000" />
     </task>
     <servers />
   </component>

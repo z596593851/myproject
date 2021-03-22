@@ -10,9 +10,12 @@ import com.hxm.network.FetchResponseSend;
 import com.hxm.producer.TopicPartition;
 import com.hxm.protocol.ApiKeys;
 import com.hxm.requests.ProduceRequest;
+import javafx.util.Pair;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KafkaRequestHandler implements Runnable{
@@ -57,18 +60,16 @@ public class KafkaRequestHandler implements Runnable{
 
     private void handleFetchRequest(RequestChannel.Request request){
         FetchRequest fetchRequest=null;
-        TopicPartition tp=null;
-        PartitionFetchInfo fetchInfo=null;
+        List<Pair<TopicPartition, PartitionFetchInfo>> fetchInfos=fetchRequest.getRequestInfo();
         replicaManager.fetchMessages(
                 fetchRequest.getMaxWait(),
                 fetchRequest.getReplicaId(),
                 fetchRequest.getMinBytes(),
                 fetchRequest.getMaxBytes(),
                 fetchRequest.getVersionId()<2,
-                tp,
-                fetchInfo,
-                (topicPartition,data)->{
-                    FetchResponse response=new FetchResponse(fetchRequest.getCorrelationId(), tp, data, fetchRequest.getVersionId(),0);
+                fetchInfos,
+                (responsePartitionData)->{
+                    FetchResponse response=new FetchResponse(fetchRequest.getCorrelationId(), responsePartitionData, fetchRequest.getVersionId(),0);
                     requestChannel.sendResponse(new RequestChannel.Response(request.processor(), request, new FetchResponseSend(request.connectionId, response)));
                 }
         );

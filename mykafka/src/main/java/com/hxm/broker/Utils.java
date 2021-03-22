@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Utils {
+    private static String ProtocolEncoding = "UTF-8";
     public static Logger log= Logger.getLogger(Utils.class);
     public static Thread newThread(String name, Runnable runnable, boolean daemon) {
         Thread thread = new Thread(runnable, name);
@@ -125,6 +126,29 @@ public class Utils {
             } catch (IOException inner) {
                 inner.addSuppressed(outer);
                 throw inner;
+            }
+        }
+    }
+
+    public static String readShortString(ByteBuffer buffer) throws UnsupportedEncodingException {
+        int size=buffer.getShort();
+        if(size<0){
+            return null;
+        }
+        byte [] bytes=new byte[size];
+        buffer.get(bytes);
+        return new String(bytes,ProtocolEncoding);
+    }
+
+    public static int shortStringLength(String string) throws UnsupportedEncodingException {
+        if(string == null) {
+            return 2;
+        } else {
+            byte[] encodedString = string.getBytes(ProtocolEncoding);
+            if(encodedString.length > Short.MAX_VALUE) {
+                throw new RuntimeException("String exceeds the maximum size of " + Short.MAX_VALUE + ".");
+            } else {
+                return 2 + encodedString.length;
             }
         }
     }
