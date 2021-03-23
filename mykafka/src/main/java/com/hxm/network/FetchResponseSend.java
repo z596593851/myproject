@@ -1,10 +1,13 @@
 package com.hxm.network;
 
 import com.hxm.consumer.FetchResponse;
+import com.hxm.consumer.TopicData;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.GatheringByteChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FetchResponseSend implements Send {
 
@@ -14,9 +17,8 @@ public class FetchResponseSend implements Send {
     private int payloadSize;
     private long sent=0L;
     private boolean pending=false;
-    private ByteBuffer buffer;
-
-
+    private final ByteBuffer buffer;
+    private final Send sends;
 
     public FetchResponseSend(String dest, FetchResponse fetchResponse) {
         this.dest = dest;
@@ -26,6 +28,11 @@ public class FetchResponseSend implements Send {
         this.buffer = ByteBuffer.allocate(4 /* for size */ + fetchResponse.headerSizeInBytes());
         fetchResponse.writeHeaderTo(buffer);
         this.buffer.rewind();
+        List<Send> sendList=new ArrayList<>();
+        fetchResponse.getDataGroupedByTopic().forEach((topic,data)->{
+            sendList.add(new TopicDataSend(dest,new TopicData(topic,data)));
+        });
+        this.sends=new MultiSend(dest,sendList);
     }
 
     @Override
@@ -40,7 +47,21 @@ public class FetchResponseSend implements Send {
 
     @Override
     public long writeTo(GatheringByteChannel channel) throws IOException {
-        return 0;
+        if (completed()) {
+            throw new RuntimeException("This operation cannot be completed on a complete request.");
+        }
+        long written = 0L;
+        if (buffer.hasRemaining()) {
+            written += channel.write(buffer);
+        }
+        if (!buffer.hasRemaining()) {
+            if (!sends.completed()) {
+                written += sends.writeTo(channel);
+            }
+        }
+        pending = false;
+        sent += written;
+        return written;
     }
 
     @Override

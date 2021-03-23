@@ -4,6 +4,7 @@ import com.hxm.producer.TopicPartition;
 import javafx.util.Pair;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +21,22 @@ public class FetchResponse {
         this.data = data;
         this.requestVersion = requestVersion;
         this.throttleTimeMs = throttleTimeMs;
-        this.dataGroupedByTopic=batchByTopic(data);
+        this.dataGroupedByTopic=batchByTopic(this.data);
         this.sizeInBytes=sizeInBytes();
+    }
+
+    public FetchResponse readFrom(ByteBuffer buffer, int requestVersion) {
+        int correlationId = buffer.getInt();
+        int throttleTime = requestVersion > 0?buffer.getInt() : 0;
+        int topicCount = buffer.getInt();
+        List<Pair<TopicPartition,FetchResponsePartitionData>> list =new ArrayList<>();
+        while (topicCount-- >0){
+            TopicData topicData=TopicData.readFrom(buffer);
+            topicData.getPartitionData().forEach(pair->{
+                list.add(new Pair<>(new TopicPartition(topicData.getTopic(),pair.getKey()),pair.getValue()));
+            });
+        }
+        return new FetchResponse(correlationId, list, requestVersion, throttleTime);
     }
 
     public int headerSizeInBytes(){
@@ -62,5 +77,7 @@ public class FetchResponse {
         return buffer.putInt(dataGroupedByTopic.size());
     }
 
-
+    public Map<String, List<Pair<Integer, FetchResponsePartitionData>>> getDataGroupedByTopic() {
+        return dataGroupedByTopic;
+    }
 }

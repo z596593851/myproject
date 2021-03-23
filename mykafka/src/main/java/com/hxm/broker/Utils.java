@@ -152,4 +152,23 @@ public class Utils {
             }
         }
     }
+
+    public static void writeShortString(ByteBuffer buffer, String string){
+        if(string==null){
+            buffer.putShort((short) -1);
+        }else {
+            byte[] encodedString = null;
+            try {
+                encodedString=string.getBytes(ProtocolEncoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if(encodedString.length>Short.MAX_VALUE){
+                throw new RuntimeException("String exceeds the maximum size of " + Short.MAX_VALUE + ".");
+            }else {
+                buffer.putShort((short) encodedString.length);
+                buffer.put(encodedString);
+            }
+        }
+    }
 }

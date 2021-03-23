@@ -39,7 +39,7 @@ public class TopicData {
     }
 
 
-    public TopicData readFrom(ByteBuffer buffer){
+    public static TopicData readFrom(ByteBuffer buffer){
         List<Pair<Integer,FetchResponsePartitionData>> topicPartitionDataPairs= new ArrayList<>();
         String topic = null;
         try {
@@ -58,5 +58,13 @@ public class TopicData {
 
     public int getHeaderSize() {
         return headerSize;
+    }
+
+    public List<Pair<Integer, FetchResponsePartitionData>> getPartitionData() {
+        return partitionData;
+    }
+
+    public String getTopic() {
+        return topic;
     }
 }
