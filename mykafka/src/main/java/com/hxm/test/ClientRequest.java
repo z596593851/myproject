@@ -35,4 +35,8 @@ public class ClientRequest {
     public RequestCompletionHandler callback() {
         return callback;
     }
+
+    public long createdTimeMs() {
+        return createdTimeMs;
+    }
 }

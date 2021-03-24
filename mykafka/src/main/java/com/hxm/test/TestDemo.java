@@ -1,5 +1,8 @@
 package com.hxm.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TestDemo {
     public Client client;
     public TestDemo(Client client){
@@ -23,9 +26,9 @@ public class TestDemo {
     }
 
     public static void main(String[] args) {
-        Client client=new Client();
-        TestDemo testDemo=new TestDemo(client);
-        testDemo.test();
+        System.out.println(Integer.MIN_VALUE);
+
+
 
     }
 

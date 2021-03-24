@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * server端的FetchResponse(由scala翻译而来)
+ */
 public class FetchResponse {
     private final int correlationId;
     private final List<Pair<TopicPartition,FetchResponsePartitionData>> data;

@@ -18,7 +18,7 @@ public class KafkaConsumer {
         this.time=new Time();
         this.subscriptions=new SubscriptionState();
         this.client=new ConsumerNetworkClient(networkClient);
-        this.fetcher=new Fetcher(client,time,1,50 * 1024 * 1024,100,10 * 1024, 500);
+        this.fetcher=new Fetcher(client,time,1,50 * 1024 * 1024,100,10 * 1024, 500,subscriptions);
     }
 
     public void subscribe(Collection<String> topics) {

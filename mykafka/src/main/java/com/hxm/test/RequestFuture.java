@@ -1,10 +1,12 @@
 package com.hxm.test;
 
+import com.hxm.consumer.ConsumerNetworkClient;
+
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class RequestFuture<T> {
+public class RequestFuture<T> implements ConsumerNetworkClient.PollCondition {
 
     private static final Object INCOMPLETE_SENTINEL = new Object();
     private final AtomicReference<Object> result = new AtomicReference<>(INCOMPLETE_SENTINEL);
@@ -137,6 +139,11 @@ public class RequestFuture<T> {
                 future.raise(e);
             }
         });
+    }
+
+    @Override
+    public boolean shouldBlock() {
+        return !isDone();
     }
 
 
