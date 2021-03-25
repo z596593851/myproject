@@ -1,4 +1,4 @@
-package com.hxm.test;
+package com.hxm.consumer;
 
 public interface RequestCompletionHandler {
 

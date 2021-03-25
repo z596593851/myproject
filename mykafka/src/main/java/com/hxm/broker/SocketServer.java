@@ -45,7 +45,7 @@ public class SocketServer {
     public static void main(String[] args) {
         SocketServer socketServer=new SocketServer("127.0.0.1",6666);
         socketServer.startup();
-        //KafkaRequestHandlerPool pool=new KafkaRequestHandlerPool(2,socketServer.getRequestChannel());
+//        KafkaRequestHandlerPool pool=new KafkaRequestHandlerPool(2,socketServer.getRequestChannel());
     }
 
 }

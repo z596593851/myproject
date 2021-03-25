@@ -2,8 +2,7 @@ package com.hxm.consumer;
 
 import com.hxm.producer.TopicPartition;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 public class SubscriptionState {
 
@@ -23,9 +22,18 @@ public class SubscriptionState {
         }
     }
 
+    public void position(TopicPartition tp, long offset) {
+        assignedState(tp).position(offset);
+    }
+
     public Long position(TopicPartition tp) {
         return assignedState(tp).position;
     }
+
+    public void seek(TopicPartition tp, long offset) {
+        assignedState(tp).seek(offset);
+    }
+
 
     private TopicPartitionState assignedState(TopicPartition tp) {
         TopicPartitionState state = this.assignment.stateValue(tp);
@@ -33,6 +41,38 @@ public class SubscriptionState {
             throw new IllegalStateException("No current assignment for partition " + tp);
         }
         return state;
+    }
+
+    public boolean isFetchable(TopicPartition tp) {
+        return isAssigned(tp) && assignedState(tp).isFetchable();
+    }
+
+
+    public boolean isAssigned(TopicPartition tp) {
+        return assignment.contains(tp);
+    }
+
+    public void movePartitionToEnd(TopicPartition tp) {
+        assignment.moveToEnd(tp);
+    }
+
+    public void assignFromSubscribed(Collection<TopicPartition> assignments) {
+//        for (TopicPartition tp : assignments) {
+//            if (!this.subscription.contains(tp.topic())) {
+//                throw new IllegalArgumentException("Assigned partition " + tp + " for non-subscribed topic.");
+//            }
+//        }
+
+        // after rebalancing, we always reinitialize the assignment value
+        this.assignment.set(partitionToStateMap(assignments));
+    }
+
+    private Map<TopicPartition, TopicPartitionState> partitionToStateMap(Collection<TopicPartition> assignments) {
+        Map<TopicPartition, TopicPartitionState> map = new HashMap<>(assignments.size());
+        for (TopicPartition tp : assignments) {
+            map.put(tp, new TopicPartitionState());
+        }
+        return map;
     }
 
     private static class TopicPartitionState {

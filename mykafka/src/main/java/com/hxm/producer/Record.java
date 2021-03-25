@@ -1,5 +1,7 @@
 package com.hxm.producer;
 
+import com.hxm.broker.Utils;
+
 import java.nio.ByteBuffer;
 
 public class Record {
@@ -79,6 +81,17 @@ public class Record {
             return KEY_OFFSET_V0 + Math.max(0, keySize());
         } else {
             return KEY_OFFSET_V1 + Math.max(0, keySize());
+        }
+    }
+
+    /**
+     * A ByteBuffer containing the message key
+     */
+    public ByteBuffer key() {
+        if (magic() == MAGIC_VALUE_V0) {
+            return sliceDelimited(KEY_SIZE_OFFSET_V0);
+        } else {
+            return sliceDelimited(KEY_SIZE_OFFSET_V1);
         }
     }
 
@@ -211,6 +224,32 @@ public class Record {
 
     public byte attributes() {
         return buffer.get(ATTRIBUTES_OFFSET);
+    }
+
+    public long checksum() {
+        return Utils.readUnsignedInt(buffer, CRC_OFFSET);
+    }
+
+    public boolean isValid() {
+        return size() >= CRC_LENGTH && checksum() == computeChecksum();
+    }
+
+    public void ensureValid() {
+        if (!isValid()) {
+            if (size() < CRC_LENGTH) {
+                throw new RuntimeException("Record is corrupt (crc could not be retrieved as the record is too "
+                        + "small, size = " + size() + ")");
+            } else {
+                throw new RuntimeException("Record is corrupt (stored crc = " + checksum()
+                        + ", computed crc = " + computeChecksum() + ")");
+            }
+        }
+    }
+    /**
+     * Compute the checksum of the record from the record contents
+     */
+    public long computeChecksum() {
+        return computeChecksum(buffer, MAGIC_OFFSET, buffer.limit() - MAGIC_OFFSET);
     }
 
 }

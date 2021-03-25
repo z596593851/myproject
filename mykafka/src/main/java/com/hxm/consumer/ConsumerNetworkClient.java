@@ -7,7 +7,6 @@ import com.hxm.protocol.ApiKeys;
 import com.hxm.protocol.ProtoUtils;
 import com.hxm.requests.AbstractRequest;
 import com.hxm.requests.RequestHeader;
-import com.hxm.test.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -91,6 +90,11 @@ public class ConsumerNetworkClient {
             poll(MAX_POLL_TIMEOUT_MS, time.milliseconds(), future);
         }
     }
+
+    public void pollNoWakeup() {
+        poll(0, time.milliseconds(), null);
+    }
+
     public void poll(long timeout, long now, PollCondition pollCondition) {
         firePendingCompletedRequests();
         trySend(now);

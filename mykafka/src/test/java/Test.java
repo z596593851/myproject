@@ -1,3 +1,8 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class Test {
     // 1 <= s.length <= 1000
     public String longestPalindrome(String s) {
@@ -33,7 +38,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        Test t=new Test();
-        System.out.println(t.longestPalindrome("aaaaa"));
+
     }
 }

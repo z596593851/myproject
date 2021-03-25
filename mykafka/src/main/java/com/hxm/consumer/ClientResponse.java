@@ -1,4 +1,4 @@
-package com.hxm.test;
+package com.hxm.consumer;
 
 import com.hxm.protocol.Struct;
 

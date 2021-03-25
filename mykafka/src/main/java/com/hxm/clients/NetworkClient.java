@@ -3,8 +3,7 @@ package com.hxm.clients;
 import com.hxm.broker.KSelector;
 import com.hxm.protocol.ApiKeys;
 import com.hxm.requests.RequestHeader;
-import com.hxm.test.ClientRequest;
-import com.hxm.network.RequestSend;
+import com.hxm.consumer.ClientRequest;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

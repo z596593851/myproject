@@ -1,4 +1,4 @@
-package com.hxm.test;
+package com.hxm.consumer;
 
 /**
  * 将RequestFuture从F类型适配到T类型

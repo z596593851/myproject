@@ -1,6 +1,4 @@
-package com.hxm.test;
-
-import com.hxm.consumer.ConsumerNetworkClient;
+package com.hxm.consumer;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

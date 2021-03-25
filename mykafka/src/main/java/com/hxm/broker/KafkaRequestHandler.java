@@ -49,7 +49,7 @@ public class KafkaRequestHandler implements Runnable{
     }
 
     private void handleProducerRequest(RequestChannel.Request request){
-        System.out.println("收到消息");
+        System.out.println("收到Producer消息");
         ProduceRequest produceRequest=(ProduceRequest)request.getBody();
         Map<TopicPartition, ByteBufferMessageSet> authorizedMessagesPerPartition=new HashMap<>();
         for(Map.Entry<TopicPartition,ByteBuffer> entry:produceRequest.partitionRecords().entrySet()){
@@ -59,7 +59,8 @@ public class KafkaRequestHandler implements Runnable{
     }
 
     private void handleFetchRequest(RequestChannel.Request request){
-        FetchRequest fetchRequest=null;
+        System.out.println("收到Producer消息");
+        FetchRequest fetchRequest=(FetchRequest)request;
         List<Pair<TopicPartition, PartitionFetchInfo>> fetchInfos=fetchRequest.getRequestInfo();
         replicaManager.fetchMessages(
                 fetchRequest.getMaxWait(),

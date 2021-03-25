@@ -5,9 +5,9 @@ import com.hxm.protocol.ApiKeys;
 import com.hxm.protocol.Struct;
 import com.hxm.requests.ProduceRequest;
 import com.hxm.requests.RequestHeader;
-import com.hxm.test.ClientRequest;
-import com.hxm.test.ClientResponse;
-import com.hxm.test.RequestCompletionHandler;
+import com.hxm.consumer.ClientRequest;
+import com.hxm.consumer.ClientResponse;
+import com.hxm.consumer.RequestCompletionHandler;
 import com.hxm.network.RequestSend;
 
 import java.nio.ByteBuffer;

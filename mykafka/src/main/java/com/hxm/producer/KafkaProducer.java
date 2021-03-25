@@ -3,7 +3,7 @@ package com.hxm.producer;
 import com.hxm.broker.KSelector;
 import com.hxm.broker.KafkaThread;
 import com.hxm.clients.NetworkClient;
-import com.hxm.test.ClientRequest;
+import com.hxm.consumer.ClientRequest;
 import com.sun.xml.internal.ws.encoding.soap.SerializationException;
 
 import java.util.List;
