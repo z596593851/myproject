@@ -41,12 +41,7 @@ public class TopicData {
 
     public static TopicData readFrom(ByteBuffer buffer){
         List<Pair<Integer,FetchResponsePartitionData>> topicPartitionDataPairs= new ArrayList<>();
-        String topic = null;
-        try {
-            topic=Utils.readShortString(buffer);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String  topic=Utils.readShortString(buffer);
         int partitionCount=buffer.getInt();
         while(partitionCount-- >0){
             int partitionId=buffer.getInt();

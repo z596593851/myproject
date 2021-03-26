@@ -66,12 +66,6 @@ public class KafkaConsumer<K,V> {
             //最后才是用Fetcher从kafka获取消息进行消费
             Map<TopicPartition, List<ConsumerRecord<K, V>>> records = pollOnce(remaining);
             if (!records.isEmpty()) {
-                // before returning the fetched records, we can send off the next round of fetches
-                // and avoid block waiting for their responses to enable pipelining while the user
-                // is handling the fetched records.
-                //
-                // NOTE: since the consumed position has already been updated, we must not allow
-                // wakeups or any other errors to be triggered prior to returning the fetched records.
                 //创建并缓存FetchRequest
                 //为了提升效率，在对records集合进行处理之前，先发送一次FetchRequest，这样线程处理完本次records集合的操作，
                 //与FethRequest及其响应在网络上传输以及在服务端的处理就变成并行的了
@@ -79,6 +73,7 @@ public class KafkaConsumer<K,V> {
                 fetcher.sendFetches();
                 //发送FetchRequest，此pollNoWakeup不会阻塞，不能被中断
                 client.pollNoWakeup();
+                return new ConsumerRecords<>(records);
             }
 
             //计算超时时间
@@ -115,12 +110,4 @@ public class KafkaConsumer<K,V> {
         return fetcher.fetchedRecords();
     }
 
-    public static void main(String[] args) {
-        KafkaConsumer<String,String> consumer=new KafkaConsumer<>();
-        consumer.subscribe(Arrays.asList("xiaoming"));
-        ConsumerRecords<String,String> consumerRecords=consumer.poll(0);
-        for(ConsumerRecord<String,String> consumerRecord:consumerRecords){
-            System.out.println(consumerRecord.key()+"--"+consumerRecord.value());
-        }
-    }
 }

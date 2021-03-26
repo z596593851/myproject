@@ -3,7 +3,6 @@ package com.hxm.consumer;
 import com.hxm.broker.Utils;
 import com.hxm.producer.*;
 import com.hxm.protocol.ApiKeys;
-import com.hxm.requests.FetchResponse;
 import com.sun.xml.internal.ws.encoding.soap.SerializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -276,7 +275,7 @@ public class Fetcher<K, V>{
                     .addListener(new RequestFutureListener<ClientResponse>() {
                         @Override
                         public void onSuccess(ClientResponse resp) {
-                            com.hxm.requests.FetchResponse response = new com.hxm.requests.FetchResponse(resp.responseBody());
+                            FetchResponse response = new FetchResponse(resp.responseBody());
                             if (!matchesRequestedPartitions(request, response)) {
                                 log.warn("Ignoring fetch response containing partitions {} since it does not match " +
                                                 "the requested partitions {}", response.responseData().keySet(),

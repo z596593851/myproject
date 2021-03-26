@@ -57,6 +57,10 @@ public class NetworkClient {
         return new RequestHeader(key.id, id, correlation++);
     }
 
+    public RequestHeader nextRequestHeader(ApiKeys key, short version) {
+        return new RequestHeader(key.id,version, id, correlation++);
+    }
+
     public void wakeup() {
         this.selector.wakeup();
     }

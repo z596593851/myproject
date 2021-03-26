@@ -100,7 +100,6 @@ public class KafkaChannel {
         send.writeTo(transportLayer);
         if (send.completed()) {
             transportLayer.removeInterestOps(SelectionKey.OP_WRITE);
-//            key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
         }
         return send.completed();
     }

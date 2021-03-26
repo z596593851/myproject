@@ -64,8 +64,7 @@ public class ConsumerNetworkClient {
 
         long now = time.milliseconds();
         RequestFutureCompletionHandler completionHandler = new RequestFutureCompletionHandler();
-        //todo
-        RequestHeader header = client.nextRequestHeader(api);
+        RequestHeader header = client.nextRequestHeader(api,version);
         RequestSend send = new RequestSend(node.idString(), header, request.toStruct());
         //将待发送的请求封装成ClientRequest并保存到unsent中等待发送
         put(node, new ClientRequest(now, true, send, completionHandler));
@@ -99,6 +98,8 @@ public class ConsumerNetworkClient {
         firePendingCompletedRequests();
         trySend(now);
         client.poll(now);
+        client.poll(now);
+//        trySend(now);
         firePendingCompletedRequests();
     }
 

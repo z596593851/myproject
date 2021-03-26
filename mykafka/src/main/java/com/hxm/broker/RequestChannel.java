@@ -1,9 +1,11 @@
 package com.hxm.broker;
 
+
 import com.hxm.network.Send;
+import com.hxm.protocol.ApiKeys;
 import com.hxm.requests.AbstractRequest;
+import com.hxm.requests.FetchRequest;
 import com.hxm.requests.RequestHeader;
-import com.hxm.network.RequestSend;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -28,13 +30,18 @@ public class RequestChannel {
         private int processor;
         public String connectionId;
         private short requestId;
+        private FetchRequest requestObj;
 
         public Request(int processor,String connectionId,ByteBuffer buffer){
             this.processor=processor;
             this.connectionId=connectionId;
             this.requestId=buffer.getShort();
-            parse(buffer);
-
+            if(requestId== ApiKeys.FETCH.id){
+                this.requestObj=FetchRequest.readFrom(buffer);
+            }
+            if(requestObj==null){
+                parse(buffer);
+            }
         }
 
         public void parse(ByteBuffer buffer){
@@ -55,6 +62,9 @@ public class RequestChannel {
             return this.body;
         }
 
+        public FetchRequest getRequestObj() {
+            return requestObj;
+        }
     }
 
     static class Response{

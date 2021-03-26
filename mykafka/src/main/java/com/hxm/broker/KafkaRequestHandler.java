@@ -1,11 +1,9 @@
 package com.hxm.broker;
 
-import com.hxm.consumer.FetchRequest;
-import com.hxm.consumer.FetchResponse;
-import com.hxm.consumer.FetchResponsePartitionData;
+import com.hxm.requests.FetchRequest;
+import com.hxm.requests.FetchResponse;
 import com.hxm.consumer.PartitionFetchInfo;
 import com.hxm.message.ByteBufferMessageSet;
-import com.hxm.message.MessageSet;
 import com.hxm.network.FetchResponseSend;
 import com.hxm.producer.TopicPartition;
 import com.hxm.protocol.ApiKeys;
@@ -13,7 +11,6 @@ import com.hxm.requests.ProduceRequest;
 import javafx.util.Pair;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +56,8 @@ public class KafkaRequestHandler implements Runnable{
     }
 
     private void handleFetchRequest(RequestChannel.Request request){
-        System.out.println("收到Producer消息");
-        FetchRequest fetchRequest=(FetchRequest)request;
+        System.out.println("收到Fetch消息");
+        FetchRequest fetchRequest=request.getRequestObj();
         List<Pair<TopicPartition, PartitionFetchInfo>> fetchInfos=fetchRequest.getRequestInfo();
         replicaManager.fetchMessages(
                 fetchRequest.getMaxWait(),

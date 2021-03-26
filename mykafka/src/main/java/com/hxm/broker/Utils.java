@@ -130,14 +130,20 @@ public class Utils {
         }
     }
 
-    public static String readShortString(ByteBuffer buffer) throws UnsupportedEncodingException {
+    public static String readShortString(ByteBuffer buffer)  {
+        String result=null;
         int size=buffer.getShort();
         if(size<0){
             return null;
         }
         byte [] bytes=new byte[size];
         buffer.get(bytes);
-        return new String(bytes,ProtocolEncoding);
+        try {
+            result=new String(bytes,ProtocolEncoding);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static int shortStringLength(String string) throws UnsupportedEncodingException {

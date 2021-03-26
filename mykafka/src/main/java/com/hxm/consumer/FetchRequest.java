@@ -1,5 +1,6 @@
 package com.hxm.consumer;
 
+import com.hxm.broker.Utils;
 import com.hxm.producer.TopicPartition;
 import com.hxm.protocol.ApiKeys;
 import com.hxm.protocol.ProtoUtils;
@@ -8,11 +9,16 @@ import com.hxm.protocol.Struct;
 import com.hxm.requests.AbstractRequest;
 import com.hxm.requests.AbstractRequestResponse;
 import javafx.util.Pair;
+import lombok.val;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
+/**
+ * consumer端的FetchRequest（java版）
+ */
 public class FetchRequest extends AbstractRequest {
-    public static final int CONSUMER_REPLICA_ID = -1;
+    public static final int CONSUMER_REPLICA_ID = 0;
     private static final Schema CURRENT_SCHEMA = ProtoUtils.currentRequestSchema(ApiKeys.FETCH.id);
     private static final String REPLICA_ID_KEY_NAME = "replica_id";
     private static final String MAX_WAIT_KEY_NAME = "max_wait_time";
@@ -33,15 +39,12 @@ public class FetchRequest extends AbstractRequest {
     // default values for older versions where a request level limit did not exist
     public static final int DEFAULT_RESPONSE_MAX_BYTES = Integer.MAX_VALUE;
 
-    private static short CurrentVersion=3;
-    private static int DefaultCorrelationId=0;
     private final int maxWait;
     private final int replicaId;
     private final int minBytes;
     private final int maxBytes;
-    private short versionId=CurrentVersion;
-    private int correlationId=DefaultCorrelationId;
-    private List<Pair<TopicPartition,PartitionFetchInfo>> requestInfo;
+
+//    private List<Pair<TopicPartition,PartitionFetchInfo>> requestInfo;
     private final LinkedHashMap<TopicPartition, PartitionData> fetchData;
 
     @Override
@@ -138,10 +141,6 @@ public class FetchRequest extends AbstractRequest {
         return result;
     }
 
-    public int getCorrelationId() {
-        return correlationId;
-    }
-
     public int getMaxWait() {
         return maxWait;
     }
@@ -158,15 +157,8 @@ public class FetchRequest extends AbstractRequest {
         return maxBytes;
     }
 
-    public short getVersionId() {
-        return versionId;
-    }
-
-    public List<Pair<TopicPartition, PartitionFetchInfo>> getRequestInfo() {
-        return requestInfo;
-    }
-
     public LinkedHashMap<TopicPartition, PartitionData> fetchData() {
         return fetchData;
     }
+
 }

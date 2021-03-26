@@ -1,6 +1,6 @@
 package com.hxm.network;
 
-import com.hxm.consumer.FetchResponse;
+import com.hxm.requests.FetchResponse;
 import com.hxm.consumer.TopicData;
 
 import java.io.IOException;
