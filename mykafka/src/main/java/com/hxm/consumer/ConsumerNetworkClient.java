@@ -98,8 +98,6 @@ public class ConsumerNetworkClient {
         firePendingCompletedRequests();
         trySend(now);
         client.poll(now);
-        client.poll(now);
-//        trySend(now);
         firePendingCompletedRequests();
     }
 

@@ -172,10 +172,10 @@ public class KSelector {
         }
 
         if (ms == 0L) {
-            return this.nioSelector.selectNow();
-        } else {
+            return this.nioSelector.select();
 //            return this.nioSelector.selectNow();
-            return this.nioSelector.select(500);
+        } else {
+            return this.nioSelector.select(ms);
         }
     }
 
@@ -189,7 +189,7 @@ public class KSelector {
             //存放接收到的响应
             //System.out.println("事件数："+readyKeys);
             pollSelectionKeys(this.nioSelector.selectedKeys(), false);
-//            pollSelectionKeys(immediatelyConnectedKeys, true);
+            pollSelectionKeys(immediatelyConnectedKeys, true);
         }
         //处理接收到的响应
         addToCompletedReceives();
@@ -247,7 +247,7 @@ public class KSelector {
                     }
                 }
                 if (key.isWritable()) {
-//                    System.out.println("有write事件");
+                    System.out.println("有write事件");
                     //给borker发送请求
                     Send send = channel.write();
                     if (send != null) {
