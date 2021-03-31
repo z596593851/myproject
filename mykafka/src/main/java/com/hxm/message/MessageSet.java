@@ -4,6 +4,7 @@ import lombok.val;
 import sun.invoke.empty.Empty;
 
 import java.nio.ByteBuffer;
+import java.nio.channels.GatheringByteChannel;
 
 public abstract class MessageSet implements Iterable<MessageAndOffset> {
     public static final int MessageSizeLength = 4;
@@ -17,4 +18,6 @@ public abstract class MessageSet implements Iterable<MessageAndOffset> {
     }
 
     public abstract int sizeInBytes();
+
+    public abstract int writeTo(GatheringByteChannel channel, long offset, int maxSize);
 }

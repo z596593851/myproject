@@ -8,8 +8,8 @@ import org.apache.zookeeper.ZooKeeper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class ZKClient {
-    Logger log= Logger.getLogger(ZKClient.class);
     private String connectStr="localhost:2181";
     private ZooKeeper zkCli;
     private int sessionTimeout=2000;

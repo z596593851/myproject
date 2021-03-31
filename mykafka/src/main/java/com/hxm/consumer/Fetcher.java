@@ -4,15 +4,14 @@ import com.hxm.broker.Utils;
 import com.hxm.producer.*;
 import com.hxm.protocol.ApiKeys;
 import com.sun.xml.internal.ws.encoding.soap.SerializationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Slf4j
 public class Fetcher<K, V>{
-    private static final Logger log = LoggerFactory.getLogger(Fetcher.class);
     private final ConsumerNetworkClient client;
     private final Time time;
     private final int minBytes;

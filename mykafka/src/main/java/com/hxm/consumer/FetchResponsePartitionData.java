@@ -42,4 +42,6 @@ public class FetchResponsePartitionData {
         buffer.position(buffer.position() + messageSetSize);
         return new FetchResponsePartitionData(hw, new ByteBufferMessageSet(messageSetBuffer));
     }
+
+
 }

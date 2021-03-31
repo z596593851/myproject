@@ -18,7 +18,7 @@ public class MyConsumer {
         KafkaConsumer<String,String> consumer=new KafkaConsumer<>(properties);
         consumer.subscribe(Arrays.asList("xiaoming"));
         while (true){
-            ConsumerRecords<String,String> consumerRecords=consumer.poll(100);
+            ConsumerRecords<String,String> consumerRecords=consumer.poll(0);
             for(ConsumerRecord<String,String> consumerRecord:consumerRecords){
                 System.out.println(consumerRecord.key()+"--"+consumerRecord.value());
             }

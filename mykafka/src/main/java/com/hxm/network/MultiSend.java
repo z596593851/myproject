@@ -1,15 +1,14 @@
 package com.hxm.network;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.channels.GatheringByteChannel;
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 public class MultiSend implements Send{
-    private static final Logger log = LoggerFactory.getLogger(MultiSend.class);
     private String dest;
     private long totalWritten = 0;
     private List<Send> sends;

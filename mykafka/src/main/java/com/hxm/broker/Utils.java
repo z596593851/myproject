@@ -2,8 +2,7 @@ package com.hxm.broker;
 
 import com.hxm.producer.Crc32;
 import com.hxm.producer.TopicPartition;
-import lombok.val;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -15,9 +14,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class Utils {
     private static String ProtocolEncoding = "UTF-8";
-    public static Logger log= Logger.getLogger(Utils.class);
     public static Thread newThread(String name, Runnable runnable, boolean daemon) {
         Thread thread = new Thread(runnable, name);
         thread.setDaemon(daemon);

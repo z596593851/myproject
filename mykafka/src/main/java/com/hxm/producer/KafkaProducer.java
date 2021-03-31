@@ -30,7 +30,7 @@ public class KafkaProducer {
         this.compressionType=CompressionType.GZIP;
         //this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY, CompressionType.GZIP,new Time());
         this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY,compressionType,time);
-        NetworkClient client=new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666);
+        NetworkClient client=new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,time);
         this.sender=new Sender(client,accumulator,new Time(), (short) 1,1);
         this.ioThread=new KafkaThread("kafka-producer-network-thread",sender,true);
         this.ioThread.start();

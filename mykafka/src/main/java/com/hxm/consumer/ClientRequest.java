@@ -8,6 +8,7 @@ public class ClientRequest {
     private long createdTimeMs;
     private boolean expectResponse;
     private boolean isInitiatedByNetworkClient;
+    private long sendTimeMs;
 
     public ClientRequest( RequestSend request, RequestCompletionHandler callback) {
         this.request = request;
@@ -38,5 +39,25 @@ public class ClientRequest {
 
     public long createdTimeMs() {
         return createdTimeMs;
+    }
+
+    public long sendTimeMs() {
+        return sendTimeMs;
+    }
+
+    public void setSendTimeMs(long sendTimeMs) {
+        this.sendTimeMs = sendTimeMs;
+    }
+
+    public boolean expectResponse() {
+        return expectResponse;
+    }
+
+    public boolean isInitiatedByNetworkClient() {
+        return isInitiatedByNetworkClient;
+    }
+
+    public boolean hasCallback() {
+        return callback != null;
     }
 }

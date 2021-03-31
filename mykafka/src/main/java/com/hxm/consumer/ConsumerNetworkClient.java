@@ -84,10 +84,19 @@ public class ConsumerNetworkClient {
         nodeUnsent.add(request);
     }
 
+    /**
+     * 阻塞式调用直到成功
+     * @param future
+     */
     public void poll(RequestFuture<?> future){
         while (!future.isDone()) {
             poll(MAX_POLL_TIMEOUT_MS, time.milliseconds(), future);
         }
+    }
+
+    //暂时让selecotr取消调connect事件
+    public void poll(){
+        client.poll(0);
     }
 
     public void pollNoWakeup() {

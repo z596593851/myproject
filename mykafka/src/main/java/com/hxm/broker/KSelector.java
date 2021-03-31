@@ -247,7 +247,7 @@ public class KSelector {
                     }
                 }
                 if (key.isWritable()) {
-                    System.out.println("有write事件");
+//                    System.out.println("有write事件");
                     //给borker发送请求
                     Send send = channel.write();
                     if (send != null) {

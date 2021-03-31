@@ -1,11 +1,9 @@
 package com.hxm.broker;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class KafkaThread extends Thread {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public KafkaThread(final String name, Runnable runnable, boolean daemon) {
         super(runnable, name);

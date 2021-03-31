@@ -20,6 +20,24 @@ public class ByteBufferMessageSet extends MessageSet {
         return buffer.limit();
     }
 
+    @Override
+    public int writeTo(GatheringByteChannel channel, long offset, int maxSize) {
+        if (offset > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException("offset should not be larger than Int.MaxValue:"+offset);
+        }
+        ByteBuffer dup = buffer.duplicate();
+        int position = (int)offset;
+        dup.position(position);
+        dup.limit(Math.min(buffer.limit(), position + maxSize));
+        int result=0;
+        try {
+            result= channel.write(dup);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public ByteBuffer getBuffer(){
         return this.buffer;
     }

@@ -4,16 +4,17 @@ import com.hxm.broker.KSelector;
 import com.hxm.clients.NetworkClient;
 import com.hxm.producer.Time;
 import com.hxm.producer.TopicPartition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
+@Slf4j
 public class KafkaConsumer<K,V> {
-
-    private static final Logger log = LoggerFactory.getLogger(KafkaConsumer.class);
 
     private final Fetcher<K,V> fetcher;
     private final ConsumerNetworkClient client;
@@ -23,8 +24,8 @@ public class KafkaConsumer<K,V> {
     private final Deserializer valueDeserializer;
 
     public KafkaConsumer() {
-        NetworkClient networkClient = new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666);
         this.time=new Time();
+        NetworkClient networkClient = new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,time);
         this.subscriptions=new SubscriptionState();
         //暂时手动插入
         TopicPartition tp1=new TopicPartition("xiaoming",0);
@@ -85,6 +86,10 @@ public class KafkaConsumer<K,V> {
     }
 
     private Map<TopicPartition, List<ConsumerRecord<K, V>>> pollOnce(long timeout) {
+        //模仿其他请求，进行阻塞式调用
+        //作为测试方案先poll一下以取消掉connect事件
+        client.poll();
+
         //尝试从completedFetches缓存中解析消息
         Map<TopicPartition, List<ConsumerRecord<K, V>>> records = fetcher.fetchedRecords();
         if (!records.isEmpty()) {

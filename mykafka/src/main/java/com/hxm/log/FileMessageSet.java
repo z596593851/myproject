@@ -1,5 +1,6 @@
 package com.hxm.log;
 
+import com.hxm.broker.TransportLayer;
 import com.hxm.message.ByteBufferMessageSet;
 import com.hxm.message.Message;
 import com.hxm.message.MessageAndOffset;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.GatheringByteChannel;
 import java.util.Iterator;
 
 public class FileMessageSet extends MessageSet {
@@ -29,22 +31,16 @@ public class FileMessageSet extends MessageSet {
         this.start = start;
         this.end = end;
         this.isSlice = isSlice;
-        this.size=getSize();
-    }
-
-    private int getSize(){
         if(isSlice){
-            return end-start;
+            this.size=end-start;
         }else {
-            int tempSize=0;
             try {
-                tempSize=Math.min((int)channel.size(),end)-start;
+                this.size = Math.min((int)channel.size(),end)-start;
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-            return tempSize;
-
         }
+
     }
 
     public FileMessageSet(File file, boolean fileAlreadyExists, int initFileSize, boolean preallocate){
@@ -58,17 +54,31 @@ public class FileMessageSet extends MessageSet {
 
     @Override
     public int sizeInBytes() {
-        if(isSlice){
-            return end-start;
-        }else {
-            int size= 0;
-            try {
-                size = Math.min((int)channel.size(),end)-start;
-                return size;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        return this.size;
+    }
+
+    @Override
+    public int writeTo(GatheringByteChannel destChannel, long writePosition, int size) {
+        int newSize =0;
+        try {
+            newSize=Math.min((int)channel.size(), end) - start;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        if (newSize < this.size) {
+            throw new RuntimeException(String.format("Size of FileMessageSet %s has been truncated during write: old size %d, new size %d",
+                    file.getAbsolutePath(), this.size, newSize));
+        }
+        long position = start + writePosition;
+        int count = Math.min(size, sizeInBytes());
+        TransportLayer transportLayer=(TransportLayer)destChannel;
+        int bytesTransferred = 0;
+        try {
+            bytesTransferred = (int)transportLayer.transferFrom(channel, position, count);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytesTransferred;
     }
 
     //查找指定消息：
@@ -212,6 +222,7 @@ public class FileMessageSet extends MessageSet {
     public void append(ByteBufferMessageSet messages) {
         //写文件
         int written = messages.writeFullyTo(channel);
+        this.size=this.size+written;
     }
 
     public File getFile(){
