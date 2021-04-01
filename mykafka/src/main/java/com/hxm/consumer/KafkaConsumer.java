@@ -28,7 +28,7 @@ public class KafkaConsumer<K,V> {
         NetworkClient networkClient = new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,time);
         this.subscriptions=new SubscriptionState();
         //暂时手动插入
-        TopicPartition tp1=new TopicPartition("xiaoming",0);
+        TopicPartition tp1=new TopicPartition("liu",0);
         subscriptions.assignFromSubscribed(asList(tp1));
         //暂时手动提交offset。其实是由定时任务提交
         subscriptions.seek(tp1,1);

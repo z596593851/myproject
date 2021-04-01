@@ -125,6 +125,7 @@ public class ReplicaManager {
             logReadInfo=new FetchDataInfo(LogOffsetMetadata.UnknownOffsetMetadata, MessageSet.Empty,false);
         }else {
             int adjustedFetchSize = Math.min(fetchInfo.getFetchSize(), limitBytes);
+//            FetchDataInfo fetch = log.read(0, adjustedFetchSize, null, minOneMessage);
             FetchDataInfo fetch = log.read(fetchInfo.getOffset(), adjustedFetchSize, null, minOneMessage);
             if (!hardMaxBytesLimit && fetch.isFirstMessageSetIncomplete()) {
                 logReadInfo = new FetchDataInfo(fetch.getFetchOffsetMetadata(), MessageSet.Empty, false);

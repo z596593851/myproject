@@ -27,8 +27,7 @@ public class Server {
 
         ReplicaManager replicaManager=new ReplicaManager(logManager,time);
         List<TopicPartition> topicPartitionList=new ArrayList<>(1);
-        topicPartitionList.add(new TopicPartition("xiaoming",0));
-        topicPartitionList.add(new TopicPartition("linlin",0));
+        topicPartitionList.add(new TopicPartition("liu",0));
         replicaManager.becomeLeaderOrFollower(topicPartitionList);
 
         KafkaRequestHandlerPool pool=new KafkaRequestHandlerPool(2,socketServer.getRequestChannel(),replicaManager);

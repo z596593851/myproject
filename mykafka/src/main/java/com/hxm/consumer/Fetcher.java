@@ -274,6 +274,7 @@ public class Fetcher<K, V>{
                     .addListener(new RequestFutureListener<ClientResponse>() {
                         @Override
                         public void onSuccess(ClientResponse resp) {
+                            System.out.println("success");
                             FetchResponse response = new FetchResponse(resp.responseBody());
                             if (!matchesRequestedPartitions(request, response)) {
                                 log.warn("Ignoring fetch response containing partitions {} since it does not match " +
@@ -339,7 +340,7 @@ public class Fetcher<K, V>{
     private List<TopicPartition> fetchablePartitions() {
         //分配给当前消费者的分区
         List<TopicPartition> fetchable=new ArrayList<>();
-        fetchable.add(new TopicPartition("xiaoming",0));
+        fetchable.add(new TopicPartition("liu",0));
         return fetchable;
     }
 
