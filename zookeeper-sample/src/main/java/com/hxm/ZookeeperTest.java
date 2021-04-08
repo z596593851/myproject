@@ -48,7 +48,7 @@ public class ZookeeperTest {
     @Test
     public void getData() throws KeeperException, InterruptedException{
         List<String> list=zkCli.getChildren("/",false);
-        list.forEach(System.out::println);
+//        list.forEach(System.out::println);
     }
 
     /**

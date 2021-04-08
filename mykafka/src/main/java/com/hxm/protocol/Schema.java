@@ -53,7 +53,7 @@ public class Schema extends Type {
         for (int i = 0; i < fields.length; i++) {
             try {
                 objects[i] = fields[i].type.read(buffer);
-                System.out.println(fields[i].name+"--"+objects[i]);
+                System.out.println(fields[i].name+"==>"+objects[i]);
             } catch (Exception e) {
                 throw new RuntimeException("Error reading field '" + fields[i].name +
                                           "': " +

@@ -116,6 +116,7 @@ public class NetworkClient {
         short apiKey = requestHeader.apiKey();
         short apiVer = requestHeader.apiVersion();
         Struct responseBody = ProtoUtils.responseSchema(apiKey, apiVer).read(responseBuffer);
+//        Struct responseBody = ProtoUtils.responseSchema(0, 2).read(responseBuffer);
         correlate(requestHeader, responseHeader);
         return responseBody;
     }

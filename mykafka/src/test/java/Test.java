@@ -1,43 +1,56 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Test {
     // 1 <= s.length <= 1000
-    public String longestPalindrome(String s) {
-        int len=s.length();
-        int x=0, y=0;
-        int max=1;
-        boolean dp[][]=new boolean[len][len];
-        for(int i=0; i<len-1; i++){
-            if(s.charAt(i)==s.charAt(i+1)){
-                dp[i][i+1]=true;
-                max=2;
-                x=i;
-                y=i+1;
-            }
+    public void re(int[] candidates, int target, int index, List<List<Integer>> result, List<Integer> temp){
+        if(index>candidates.length-1){
+            return;
         }
-        for(int i=0; i<len; i++){
-            dp[i][i]=true;
+        if(target==0){
+            result.add(new ArrayList<>(temp));
+            return;
         }
-        for(int gap=2; gap<len; gap++){
-            for(int i=0; i+gap<len; i++){
-                int j=i+gap;
-                if(s.charAt(i)==s.charAt(j) && dp[i+1][j-1]){
-                    dp[i][j]=true;
-                    if(j-i+1>max){
-                        max=j-i+1;
-                        x=i;
-                        y=j;
+        if(target<0){
+            return;
+        }
+        temp.add(candidates[index]);
+        re(candidates, target-candidates[index], index, result,temp);
+        re(candidates, target-candidates[index], index+1, result,temp);
+        temp.remove(temp.size()-1);
+    }
+
+    public static void main(String[] args) {
+        List<List<Integer>> result=new ArrayList<>();
+        List<Integer> temp=new ArrayList<>();
+        int[] nums={2,3,6,7};
+        Test t=new Test();
+        t.re(nums,7,0,result,temp);
+    }
+
+    public int trap(int[] height) {
+        int sum=0;
+        int i=0;
+        Stack<Integer> stack=new Stack<>();
+        while(i<height.length){
+            if(stack.size()==0){
+                stack.push(i);
+                i++;
+            }else {
+                if(height[i]<stack.peek()){
+                    stack.push(i);
+                    i++;
+                }else {
+                    if(stack.size()>=2){
+                        int index=stack.pop();
+                        sum+=(Math.min(height[index],height[stack.peek()])-height[index])*(i-stack.peek()-1);
+                    }else {
+                        stack.pop();
+                        stack.push(i);
+                        i++;
                     }
                 }
             }
         }
-        return s.substring(x,y+1);
-    }
-
-    public static void main(String[] args) {
-
+        return sum;
     }
 }

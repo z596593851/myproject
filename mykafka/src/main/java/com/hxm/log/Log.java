@@ -48,6 +48,8 @@ public class Log {
     public FetchDataInfo read(long startOffset, int maxLength, Long maxOffset, boolean minOneMessage){
         LogOffsetMetadata currentNextOffsetMetadata=nextOffsetMetadata;
         long next=currentNextOffsetMetadata.getMessageOffset();
+        //todo
+        next=2;
         if(startOffset==next){
             return new FetchDataInfo(currentNextOffsetMetadata,MessageSet.Empty,false);
         }

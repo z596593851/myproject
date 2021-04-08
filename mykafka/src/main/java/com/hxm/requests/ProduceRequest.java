@@ -103,7 +103,4 @@ public class ProduceRequest extends AbstractRequest {
         return new ProduceRequest(ProtoUtils.parseRequest(ApiKeys.PRODUCE.id, versionId, buffer));
     }
 
-    public static ProduceRequest parse(ByteBuffer buffer) {
-        return new ProduceRequest(CURRENT_SCHEMA.read(buffer));
-    }
 }

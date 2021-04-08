@@ -31,17 +31,6 @@ public class FetchResponse extends AbstractRequestResponse {
 
     // Default throttle time
     private static final int DEFAULT_THROTTLE_TIME = 0;
-
-    /**
-     * Possible error code:
-     *
-     *  OFFSET_OUT_OF_RANGE (1)
-     *  UNKNOWN_TOPIC_OR_PARTITION (3)
-     *  NOT_LEADER_FOR_PARTITION (6)
-     *  REPLICA_NOT_AVAILABLE (9)
-     *  UNKNOWN (-1)
-     */
-
     private static final String HIGH_WATERMARK_KEY_NAME = "high_watermark";
     private static final String RECORD_SET_KEY_NAME = "record_set";
 
@@ -63,64 +52,6 @@ public class FetchResponse extends AbstractRequestResponse {
         }
     }
 
-    /**
-     * Constructor for Version 0
-     * @param responseData fetched data grouped by topic-partition
-     */
-    public FetchResponse(Map<TopicPartition, PartitionData> responseData) {
-        this(0, new LinkedHashMap<>(responseData), DEFAULT_THROTTLE_TIME);
-    }
-
-    /**
-     * Constructor for Version 1 and 2
-     * @param responseData fetched data grouped by topic-partition
-     * @param throttleTime Time in milliseconds the response was throttled
-     */
-    public FetchResponse(Map<TopicPartition, PartitionData> responseData, int throttleTime) {
-        // the schema for versions 1 and 2 is the same, so we pick 2 here
-        this(2, new LinkedHashMap<>(responseData), throttleTime);
-    }
-
-    /**
-     * Constructor for Version 3
-     * @param responseData fetched data grouped by topic-partition
-     * @param throttleTime Time in milliseconds the response was throttled
-     */
-    public FetchResponse(LinkedHashMap<TopicPartition, PartitionData> responseData, int throttleTime) {
-        this(3, responseData, throttleTime);
-    }
-
-    private FetchResponse(int version, LinkedHashMap<TopicPartition, PartitionData> responseData, int throttleTime) {
-        super(new Struct(ProtoUtils.responseSchema(ApiKeys.FETCH.id, version)));
-
-        List<FetchRequest.TopicAndPartitionData<PartitionData>> topicsData = FetchRequest.TopicAndPartitionData.batchByTopic(responseData);
-        List<Struct> topicArray = new ArrayList<>();
-        for (FetchRequest.TopicAndPartitionData<PartitionData> topicEntry: topicsData) {
-            Struct topicData = struct.instance(RESPONSES_KEY_NAME);
-            topicData.set(TOPIC_KEY_NAME, topicEntry.topic);
-            List<Struct> partitionArray = new ArrayList<>();
-            for (Map.Entry<Integer, PartitionData> partitionEntry : topicEntry.partitions.entrySet()) {
-                PartitionData fetchPartitionData = partitionEntry.getValue();
-                Struct partitionData = topicData.instance(PARTITIONS_KEY_NAME);
-                partitionData.set(PARTITION_KEY_NAME, partitionEntry.getKey());
-                partitionData.set(ERROR_CODE_KEY_NAME, fetchPartitionData.errorCode);
-                partitionData.set(HIGH_WATERMARK_KEY_NAME, fetchPartitionData.highWatermark);
-                partitionData.set(RECORD_SET_KEY_NAME, fetchPartitionData.recordSet);
-                partitionArray.add(partitionData);
-            }
-            topicData.set(PARTITIONS_KEY_NAME, partitionArray.toArray());
-            topicArray.add(topicData);
-        }
-        struct.set(RESPONSES_KEY_NAME, topicArray.toArray());
-
-        if (version >= 1) {
-            struct.set(THROTTLE_TIME_KEY_NAME, throttleTime);
-        }
-
-        this.responseData = responseData;
-        this.throttleTime = throttleTime;
-    }
-
     public FetchResponse(Struct struct) {
         super(struct);
         LinkedHashMap<TopicPartition, PartitionData> responseData = new LinkedHashMap<>();
@@ -134,6 +65,7 @@ public class FetchResponse extends AbstractRequestResponse {
                 long highWatermark = partitionResponse.getLong(HIGH_WATERMARK_KEY_NAME);
                 ByteBuffer recordSet = partitionResponse.getBytes(RECORD_SET_KEY_NAME);
                 PartitionData partitionData = new PartitionData(errorCode, highWatermark, recordSet);
+//                PartitionData partitionData = new PartitionData((short)0, 0L, recordSet);
                 responseData.put(new TopicPartition(topic, partition), partitionData);
             }
         }
@@ -145,15 +77,4 @@ public class FetchResponse extends AbstractRequestResponse {
         return responseData;
     }
 
-    public int getThrottleTime() {
-        return this.throttleTime;
-    }
-
-    public static FetchResponse parse(ByteBuffer buffer) {
-        return new FetchResponse(CURRENT_SCHEMA.read(buffer));
-    }
-
-    public static FetchResponse parse(ByteBuffer buffer, int version) {
-        return new FetchResponse(ProtoUtils.responseSchema(ApiKeys.FETCH.id, version).read(buffer));
-    }
 }
