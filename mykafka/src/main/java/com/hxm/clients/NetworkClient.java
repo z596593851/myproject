@@ -103,10 +103,10 @@ public class NetworkClient {
 
     public boolean maybeHandleCompletedReceive(ClientRequest req, long now, Struct body) {
         short apiKey = req.request().header().apiKey();
-        if (apiKey == ApiKeys.METADATA.id && req.isInitiatedByNetworkClient()) {
+//        if (apiKey == ApiKeys.METADATA.id && req.isInitiatedByNetworkClient()) {
 //            handleResponse(req.request().header(), body, now);
-            return true;
-        }
+//            return true;
+//        }
         return false;
     }
 
@@ -115,8 +115,10 @@ public class NetworkClient {
         // Always expect the response version id to be the same as the request version id
         short apiKey = requestHeader.apiKey();
         short apiVer = requestHeader.apiVersion();
+        //todo
+        System.out.println(String.format("apiKey:%d , apiVer:%d",apiKey,apiVer));
         Struct responseBody = ProtoUtils.responseSchema(apiKey, apiVer).read(responseBuffer);
-//        Struct responseBody = ProtoUtils.responseSchema(0, 2).read(responseBuffer);
+//        Struct responseBody = ProtoUtils.responseSchema(1, 2).read(responseBuffer);
         correlate(requestHeader, responseHeader);
         return responseBody;
     }

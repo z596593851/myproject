@@ -199,14 +199,23 @@ public class Fetcher<K, V>{
             MemoryRecords records = MemoryRecords.readableRecords(buffer);
             List<ConsumerRecord<K, V>> parsed = new ArrayList<>();
             //解压缩
-            for (LogEntry logEntry : records) {
-                // Skip the messages earlier than current position.
+            Iterator<LogEntry> iterator= records.iterator();
+            while (iterator.hasNext()){
+                LogEntry logEntry=iterator.next();
                 //跳过早于position的消息
                 if (logEntry.offset() >= position) {
                     parsed.add(parseRecord(tp, logEntry));
                     bytes += logEntry.size();
                 }
             }
+//            for (LogEntry logEntry : records) {
+//                // Skip the messages earlier than current position.
+//                //跳过早于position的消息
+//                if (logEntry.offset() >= position) {
+//                    parsed.add(parseRecord(tp, logEntry));
+//                    bytes += logEntry.size();
+//                }
+//            }
 
             recordsCount = parsed.size();
 

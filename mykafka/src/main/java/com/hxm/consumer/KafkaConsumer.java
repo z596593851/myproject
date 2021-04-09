@@ -30,12 +30,13 @@ public class KafkaConsumer<K,V> {
         //暂时手动插入
         TopicPartition tp1=new TopicPartition("liu",0);
         subscriptions.assignFromSubscribed(asList(tp1));
-        //暂时手动提交offset。其实是由定时任务提交
+        //todo 暂时手动提交offset。其实是由定时任务提交
         subscriptions.seek(tp1,1);
 
 
         this.client=new ConsumerNetworkClient(networkClient);
-        this.keyDeserializer=new IntegerDeserializer();
+        //todo
+        this.keyDeserializer=new StringDeserializer();
         this.valueDeserializer=new StringDeserializer();
         this.fetcher=new Fetcher<K,V>(client,time,1,50 * 1024 * 1024,100,10 * 1024,500, false, subscriptions,keyDeserializer,valueDeserializer);
     }

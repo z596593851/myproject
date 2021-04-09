@@ -24,7 +24,9 @@ public class PartitionDataSend implements Send{
         this.emptyBuffer=ByteBuffer.allocate(0);
         this.messageSize=partitionData.getMessages().sizeInBytes();
         this.buffer=ByteBuffer.allocate( 4 /** partitionId **/ + FetchResponsePartitionData.headerSize);
+        //todo 关键
         buffer.putInt(partitionId);
+        buffer.putShort(partitionData.getError());
         buffer.putLong(partitionData.getHw());
         buffer.putInt(partitionData.getMessages().sizeInBytes());
         buffer.rewind();

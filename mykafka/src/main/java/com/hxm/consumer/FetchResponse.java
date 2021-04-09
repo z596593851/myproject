@@ -34,9 +34,6 @@ public class FetchResponse extends AbstractRequestResponse {
     private static final String HIGH_WATERMARK_KEY_NAME = "high_watermark";
     private static final String RECORD_SET_KEY_NAME = "record_set";
 
-    public static final long INVALID_HIGHWATERMARK = -1L;
-    public static final ByteBuffer EMPTY_RECORD_SET = ByteBuffer.allocate(0);
-
     private final LinkedHashMap<TopicPartition, PartitionData> responseData;
     private final int throttleTime;
 
@@ -61,6 +58,7 @@ public class FetchResponse extends AbstractRequestResponse {
             for (Object partitionResponseObj : topicResponse.getArray(PARTITIONS_KEY_NAME)) {
                 Struct partitionResponse = (Struct) partitionResponseObj;
                 int partition = partitionResponse.getInt(PARTITION_KEY_NAME);
+                //todo
                 short errorCode = partitionResponse.getShort(ERROR_CODE_KEY_NAME);
                 long highWatermark = partitionResponse.getLong(HIGH_WATERMARK_KEY_NAME);
                 ByteBuffer recordSet = partitionResponse.getBytes(RECORD_SET_KEY_NAME);

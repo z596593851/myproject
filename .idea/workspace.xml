@@ -5,19 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c45e4cfa-f457-4537-91d4-9e264bd0d235" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/leetcode/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/leetcode/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/clients/NetworkClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/clients/NetworkClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponsePartitionData.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponsePartitionData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/Fetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/Fetcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/KafkaConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/KafkaConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/example/Consumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/example/Consumer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/example/Producer.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/example/Producer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/log/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/log/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/network/PartitionDataSend.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/network/PartitionDataSend.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/ApiKeys.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/ApiKeys.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/Protocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/Schema.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/Schema.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/requests/ProduceRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/requests/ProduceRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/src/test/java/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/test/java/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/ReplicaManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/broker/ReplicaManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykafka/target/test-classes/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/test-classes/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zookeeper-sample/src/main/java/com/hxm/ZookeeperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/zookeeper-sample/src/main/java/com/hxm/ZookeeperTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/consumer/FetchResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/consumer/FetchResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/protocol/Protocol.class" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/target/classes/com/hxm/protocol/Protocol.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,12 +98,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KafkaConsumer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.hxm.consumer.KafkaConsumer" />
+    <configuration name="Producer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.example.Producer" />
       <module name="mykafka" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.hxm.requests.*" />
+          <option name="PATTERN" value="com.hxm.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -110,12 +111,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Producer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.hxm.example.Producer" />
+    <configuration name="Protocol" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hxm.protocol.Protocol" />
       <module name="mykafka" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.hxm.example.*" />
+          <option name="PATTERN" value="com.hxm.protocol.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -167,18 +168,18 @@
     <list>
       <item itemvalue="Application.ZKServer" />
       <item itemvalue="Application.Server" />
-      <item itemvalue="Application.KafkaConsumer" />
       <item itemvalue="Application.Consumer" />
       <item itemvalue="Application.Producer" />
       <item itemvalue="Application.Test" />
+      <item itemvalue="Application.Protocol" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Consumer" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.Protocol" />
         <item itemvalue="Application.Producer" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.KafkaConsumer" />
       </list>
     </recent_temporary>
   </component>
@@ -249,7 +250,9 @@
       <workItem from="1617191182027" duration="7627000" />
       <workItem from="1617243914590" duration="11277000" />
       <workItem from="1617330048021" duration="7329000" />
-      <workItem from="1617849756632" duration="13976000" />
+      <workItem from="1617849756632" duration="14029000" />
+      <workItem from="1617933836428" duration="249000" />
+      <workItem from="1617934129819" duration="28142000" />
     </task>
     <servers />
   </component>
@@ -260,29 +263,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/log/Log.java</url>
-          <line>48</line>
-          <option name="timeStamp" value="117" />
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/Fetcher.java</url>
+          <line>201</line>
+          <option name="timeStamp" value="140" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol/Schema.java</url>
-          <line>51</line>
-          <option name="timeStamp" value="118" />
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/producer/MemoryRecords.java</url>
+          <line>327</line>
+          <option name="timeStamp" value="141" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchRequest.java</url>
-          <line>94</line>
-          <option name="timeStamp" value="119" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/broker/RequestChannel.java</url>
-          <line>49</line>
-          <option name="timeStamp" value="120" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/FetchResponse.java</url>
-          <line>64</line>
-          <option name="timeStamp" value="121" />
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/Fetcher.java</url>
+          <line>255</line>
+          <option name="timeStamp" value="143" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -297,7 +290,7 @@
     <SUITE FILE_PATH="coverage/myproject$TestDemo.ic" NAME="TestDemo Coverage Results" MODIFIED="1612802545996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.hxm.test.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/myproject$Consumer.ic" NAME="Consumer Coverage Results" MODIFIED="1617105139339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/myproject$Consumer.ic" NAME="Consumer Coverage Results" MODIFIED="1617934609988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.hxm.example.*</FILTER>
     </SUITE>
   </component>
