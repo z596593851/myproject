@@ -1,8 +1,8 @@
 package com.hxm.example;
 
-import com.hxm.consumer.ConsumerRecord;
-import com.hxm.consumer.ConsumerRecords;
-import com.hxm.consumer.KafkaConsumer;
+import com.hxm.client.client.consumer.ConsumerRecord;
+import com.hxm.client.client.consumer.ConsumerRecords;
+import com.hxm.client.client.consumer.KafkaConsumer;
 
 import java.util.Arrays;
 
