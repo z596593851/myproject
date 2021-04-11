@@ -7,6 +7,7 @@ import com.hxm.client.common.record.MemoryRecords;
 import com.hxm.client.common.record.Record;
 import com.hxm.client.common.record.Records;
 import com.hxm.client.common.utils.Time;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class RecordAccumulator {
 
     private volatile boolean closed;
@@ -60,7 +62,6 @@ public class RecordAccumulator {
                                      long maxTimeToBlock) throws InterruptedException {
         appendsInProgress.incrementAndGet();
         try {
-            // check if we have an in-progress batch
             //1、根据分区找到应该插入到哪个队列
             Deque<RecordBatch> dq = getOrCreateDeque(tp);
             synchronized (dq) {
@@ -73,13 +74,11 @@ public class RecordAccumulator {
                     return appendResult;
                 }
             }
-
-            // we don't have an in-progress record batch try to allocate a new batch
             //3、计算一个批次的大小
             //虽然默认是16k，但是会从每条消息的大小和16k取一个最大值作为当前批次的大小
             //所以如果一条消息大于16k，那么就会一条消息作为一个批次发送，那么丧失的批次的意义
             int size = Math.max(this.batchSize, Records.LOG_OVERHEAD + Record.recordSize(key, value));
-            //log.trace("Allocating a new {} byte message buffer for topic {} partition {}", size, tp.topic(), tp.partition());
+            log.trace("Allocating a new {} byte message buffer for topic {} partition {}", size, tp.topic(), tp.partition());
             //4、从内存池分配批次内存
             ByteBuffer buffer = free.allocate(size, maxTimeToBlock);
             synchronized (dq) {

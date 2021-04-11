@@ -46,7 +46,7 @@ public class BufferPool {
                 return this.free.pollFirst();
             }
             int freeListSize = this.free.size() * this.poolableSize;
-            //内存从 availableMemory 分配出去，用完之后放入free
+            //内存从 availableMemory + free 够用，则直接分配
             if (this.availableMemory + freeListSize >= size) {
                 //如果availableMemory不够，从free回收
                 freeUp(size);
@@ -55,13 +55,13 @@ public class BufferPool {
                 return ByteBuffer.allocate(size);
             } else {
                 //可能内存池子只剩余10k，但是一条消息需要32k，则一点一点分配
-                //统计分配的内存
+                //统计分配出的内存
                 int accumulated = 0;
                 ByteBuffer buffer = null;
                 Condition moreMemory = this.lock.newCondition();
                 long remainingTimeToBlockNs = TimeUnit.MILLISECONDS.toNanos(maxTimeToBlockMs);
                 this.waiters.addLast(moreMemory);
-                //可分配的大小还是小于要分配的
+                //已分配的大小还是小于要分配的
                 while (accumulated < size) {
                     long startWaitNs = time.nanoseconds();
                     long timeNs;
@@ -75,18 +75,16 @@ public class BufferPool {
                     } finally {
                         long endWaitNs = time.nanoseconds();
                         timeNs = Math.max(0L, endWaitNs - startWaitNs);
-//                        this.waitTime.record(timeNs, time.milliseconds());
                     }
-
+                    //等待超时
                     if (waitingTimeElapsed) {
                         this.waiters.remove(moreMemory);
                         throw new RuntimeException("Failed to allocate memory within the configured max blocking time " + maxTimeToBlockMs + " ms.");
                     }
 
                     remainingTimeToBlockNs -= timeNs;
-                    // check if we can satisfy this request from the free list,
-                    // otherwise allocate memory
                     //再次尝试从free获取内存
+                    //如果所需正好是16k，直接从free中pop一个
                     if (accumulated == 0 && size == this.poolableSize && !this.free.isEmpty()) {
                         // just grab a buffer from the free list
                         buffer = this.free.pollFirst();
@@ -101,15 +99,12 @@ public class BufferPool {
                     }
                 }
 
-                // remove the condition for this thread to let the next thread
-                // in line start getting memory
                 Condition removed = this.waiters.removeFirst();
                 if (removed != moreMemory) {
                     throw new IllegalStateException("Wrong condition: this shouldn't happen.");
                 }
 
-                // signal any additional waiters if there is more memory left
-                // over for them
+                // 唤醒其他等待的信号
                 if (this.availableMemory > 0 || !this.free.isEmpty()) {
                     if (!this.waiters.isEmpty()) {
                         this.waiters.peekFirst().signal();
