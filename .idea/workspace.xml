@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c45e4cfa-f457-4537-91d4-9e264bd0d235" name="Default Changelist" comment="" />
+    <list default="true" id="c45e4cfa-f457-4537-91d4-9e264bd0d235" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/client/producer/internals/BufferPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/client/producer/internals/BufferPool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/client/producer/internals/RecordAccumulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/client/producer/internals/RecordAccumulator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/common/record/MemoryRecords.java" beforeDir="false" afterPath="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/common/record/MemoryRecords.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,20 +21,21 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="userSettingsFile" value="$USER_HOME$/.m2/58settings.xml" />
-      </MavenGeneralSettings>
-    </option>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
@@ -60,6 +66,10 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/protocol" />
       <recent name="$PROJECT_DIR$/mykafka/src/main/resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/client/client" />
+      <recent name="$PROJECT_DIR$/mykafka/src/main/java/com/hxm/clients/clients" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.hxm.clients" />
@@ -97,11 +107,11 @@
       </method>
     </configuration>
     <configuration name="Protocol" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.hxm.protocol.Protocol" />
+      <option name="MAIN_CLASS_NAME" value="com.hxm.client.common.protocol.Protocol" />
       <module name="mykafka" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.hxm.protocol.*" />
+          <option name="PATTERN" value="com.hxm.client.common.protocol.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -149,8 +159,8 @@
       <list>
         <item itemvalue="Application.Consumer" />
         <item itemvalue="Application.Server" />
-        <item itemvalue="Application.Protocol" />
         <item itemvalue="Application.Producer" />
+        <item itemvalue="Application.Protocol" />
         <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
@@ -224,30 +234,34 @@
       <workItem from="1617330048021" duration="7329000" />
       <workItem from="1617849756632" duration="14029000" />
       <workItem from="1617933836428" duration="249000" />
-      <workItem from="1617934129819" duration="29155000" />
+      <workItem from="1617934129819" duration="28142000" />
+      <workItem from="1618034112977" duration="15543000" />
+      <workItem from="1618049921164" duration="6892000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/Fetcher.java</url>
-          <line>201</line>
-          <option name="timeStamp" value="140" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/producer/MemoryRecords.java</url>
-          <line>327</line>
-          <option name="timeStamp" value="141" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/consumer/Fetcher.java</url>
-          <line>255</line>
-          <option name="timeStamp" value="143" />
+          <url>file://$PROJECT_DIR$/mykafka/src/main/java/com/hxm/core/server/ReplicaManager.java</url>
+          <line>80</line>
+          <option name="timeStamp" value="148" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -259,11 +273,11 @@
     </pin-to-top-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/myproject$TestDemo.ic" NAME="TestDemo Coverage Results" MODIFIED="1612802545996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>com.hxm.test.*</FILTER>
-    </SUITE>
     <SUITE FILE_PATH="coverage/myproject$Consumer.ic" NAME="Consumer Coverage Results" MODIFIED="1617934609988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.hxm.example.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/myproject$TestDemo.ic" NAME="TestDemo Coverage Results" MODIFIED="1612802545996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.hxm.test.*</FILTER>
     </SUITE>
   </component>
 </project>

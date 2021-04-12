@@ -1,19 +1,19 @@
 package com.hxm.example;
 
-import com.hxm.broker.KafkaRequestHandlerPool;
-import com.hxm.broker.KafkaScheduler;
-import com.hxm.broker.ReplicaManager;
-import com.hxm.broker.SocketServer;
-import com.hxm.log.LogManager;
-import com.hxm.producer.Time;
-import com.hxm.producer.TopicPartition;
+import com.hxm.core.server.KafkaRequestHandlerPool;
+import com.hxm.core.utils.KafkaScheduler;
+import com.hxm.core.server.ReplicaManager;
+import com.hxm.core.network.SocketServer;
+import com.hxm.core.log.LogManager;
+import com.hxm.client.common.utils.Time;
+import com.hxm.client.common.TopicPartition;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static String path="/Users/apple/Desktop/log";
+    private static String path="/Users/boa/Desktop/log";
 
     public static void main(String[] args) {
         File[] files= {new File(path)};
