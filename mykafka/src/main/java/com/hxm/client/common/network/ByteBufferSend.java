@@ -17,8 +17,9 @@ public class ByteBufferSend implements Send {
         super();
         this.destination = destination;
         this.buffers = buffers;
-        for (int i = 0; i < buffers.length; i++)
+        for (int i = 0; i < buffers.length; i++) {
             remaining += buffers[i].remaining();
+        }
         this.size = remaining;
     }
 

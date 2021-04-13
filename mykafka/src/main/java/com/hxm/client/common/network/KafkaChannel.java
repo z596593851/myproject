@@ -121,4 +121,8 @@ public class KafkaChannel {
         }
         return socket.getInetAddress().toString();
     }
+
+    public boolean ready() {
+        return transportLayer.ready();
+    }
 }

@@ -29,6 +29,10 @@ public class Node {
         return port;
     }
 
+    public boolean isEmpty() {
+        return host == null || host.isEmpty() || port < 0;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

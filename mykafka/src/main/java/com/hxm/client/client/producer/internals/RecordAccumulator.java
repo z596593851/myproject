@@ -1,5 +1,8 @@
 package com.hxm.client.client.producer.internals;
 
+import com.hxm.client.common.Cluster;
+import com.hxm.client.common.Node;
+import com.hxm.client.common.PartitionInfo;
 import com.hxm.client.common.utils.Utils;
 import com.hxm.client.common.TopicPartition;
 import com.hxm.client.common.record.CompressionType;
@@ -26,11 +29,18 @@ public class RecordAccumulator {
     private final ConcurrentMap<TopicPartition, Deque<RecordBatch>> batches;
     private final CompressionType compression;
     private final IncompleteRecordBatches incomplete;
+    private final long lingerMs;
+    private final long retryBackoffMs;
+    private int drainIndex;
+
 
     public RecordAccumulator(int batchSize,
                              long totalSize,
                              CompressionType compression,
+                             long lingerMs,
+                             long retryBackoffMs,
                              Time time) {
+        this.drainIndex=0;
         this.closed = false;
         this.appendsInProgress = new AtomicInteger(0);
         this.batchSize = batchSize;
@@ -39,6 +49,8 @@ public class RecordAccumulator {
         this.batches=new ConcurrentHashMap<>();
         this.compression=compression;
         this.incomplete=new IncompleteRecordBatches();
+        this.lingerMs=lingerMs;
+        this.retryBackoffMs=retryBackoffMs;
 
     }
 
@@ -91,6 +103,7 @@ public class RecordAccumulator {
                 RecordAppendResult appendResult = tryAppend(timestamp, key, value, callback, dq);
                 if (appendResult != null) {
                     // Somebody else found us a batch, return the one we waited for! Hopefully this doesn't happen often...
+                    //释放空间
                     free.deallocate(buffer);
                     return appendResult;
                 }
@@ -102,6 +115,7 @@ public class RecordAccumulator {
                 //7、把批次放入队列的队尾
                 dq.addLast(batch);
                 incomplete.add(batch);
+                // dq.size() > 1 和 batch.records.isFull() 都可以说明已经有一个写满的batch，
                 return new RecordAppendResult(future, dq.size() > 1 || batch.records.isFull(), true);
             }
         } finally {
@@ -136,10 +150,6 @@ public class RecordAccumulator {
         return null;
     }
 
-    private Deque<RecordBatch> getDeque(TopicPartition tp) {
-        return batches.get(tp);
-    }
-
     public Map<Integer, List<RecordBatch>> drain(){
         Map<Integer, List<RecordBatch>> batches = new HashMap<>();
         List<RecordBatch> batchList=new ArrayList<>();
@@ -154,6 +164,120 @@ public class RecordAccumulator {
             batches.put(1,batchList);
         }
         return batches;
+    }
+
+    public Map<Integer, List<RecordBatch>> drain(Cluster cluster,
+                                                 Set<Node> nodes,
+                                                 int maxSize,
+                                                 long now) {
+        if (nodes.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<Integer, List<RecordBatch>> batches = new HashMap<>();
+        for (Node node : nodes) {
+            int size = 0;
+            List<PartitionInfo> parts = cluster.partitionsForNode(node.id());
+            List<RecordBatch> ready = new ArrayList<>();
+            /* to make starvation less likely this loop doesn't start at 0 */
+            int start = drainIndex = drainIndex % parts.size();
+            do {
+                PartitionInfo part = parts.get(drainIndex);
+                // Only proceed if the partition has no in-flight batches.
+                Deque<RecordBatch> deque = getDeque(new TopicPartition(part.topic(), part.partition()));
+                if (deque != null) {
+                    synchronized (deque) {
+                        RecordBatch first = deque.peekFirst();
+                        if (first != null) {
+                            if (size + first.records.sizeInBytes() > maxSize && !ready.isEmpty()) {
+                                // there is a rare case that a single batch size is larger than the request size due
+                                // to compression; in this case we will still eventually send this batch in a single
+                                // request
+                                break;
+                            } else {
+                                RecordBatch batch = deque.pollFirst();
+                                batch.records.close();
+                                size += batch.records.sizeInBytes();
+                                ready.add(batch);
+                                batch.drainedMs = now;
+                            }
+                        }
+                    }
+                }
+
+                this.drainIndex = (this.drainIndex + 1) % parts.size();
+            } while (start != drainIndex);
+            batches.put(node.id(), ready);
+        }
+        return batches;
+    }
+
+    public ReadyCheckResult ready(Cluster cluster, long nowMs) {
+        Set<Node> readyNodes = new HashSet<>();
+        long nextReadyCheckDelayMs = Long.MAX_VALUE;
+        //由于内存池内存不足而等待的线程数
+        boolean exhausted = this.free.queued() > 0;
+        //遍历batches中所有的队列
+        for (Map.Entry<TopicPartition, Deque<RecordBatch>> entry : this.batches.entrySet()) {
+            TopicPartition part = entry.getKey();
+            Deque<RecordBatch> deque = entry.getValue();
+            //根据分区获取到该分区的leader partition所在的broker
+            Node leader = cluster.leaderFor(part);
+            synchronized (deque) {
+                if (!readyNodes.contains(leader)) {
+                    //从队列的队头获取批次
+                    RecordBatch batch = deque.peekFirst();
+                    if (batch != null) {
+                        /*
+                        batch.lastAttemptMs：上一次重试时间
+                        retryBackoffMs：重试的时间间隔
+                        backingOff：重新发送的时间到了
+                         */
+                        //waitedTimeMs：这个批次已经等了多久
+                        long waitedTimeMs = nowMs - batch.lastAttemptMs;
+                        //lingerMs：如果没有凑齐一个批次，要等待多久再发送。默认0
+                        //如果不设置的话，就代表来一条消息就发送一条，明显不合适，所以需要配置
+                        //一条消息最多等多久
+                        long timeToWaitMs =lingerMs;
+                        //最多等多久-等了多久=还要等多久
+                        long timeLeftMs = Math.max(timeToWaitMs - waitedTimeMs, 0);
+                        //deque.size() > 1说明队列里至少有一个批次已经写满了，或者队列里只有一个批次且已经写满
+                        boolean full = deque.size() > 1 || batch.records.isFull();
+                        boolean expired = waitedTimeMs >= timeToWaitMs;
+                        //一个批次写满了 || 时间到了（即使批次没写满） || 内存不足 ||
+                        boolean sendable = full || expired || exhausted || closed;
+                        if (sendable) {
+                            //把可以发送批次的partition的leader partition所在的主机加入到readyNodes
+                            readyNodes.add(leader);
+                        } else {
+                            // Note that this results in a conservative estimate since an un-sendable partition may have
+                            // a leader that will later be found to have sendable data. However, this is good enough
+                            // since we'll just wake up and then sleep again for the remaining time.
+                            nextReadyCheckDelayMs = Math.min(timeLeftMs, nextReadyCheckDelayMs);
+                        }
+                    }
+                }
+            }
+        }
+        return new ReadyCheckResult(readyNodes, nextReadyCheckDelayMs);
+    }
+
+    public void close() {
+        this.closed = true;
+    }
+
+
+    private Deque<RecordBatch> getDeque(TopicPartition tp) {
+        return batches.get(tp);
+    }
+
+    public final static class ReadyCheckResult {
+        public final Set<Node> readyNodes;
+        public final long nextReadyCheckDelayMs;
+
+        public ReadyCheckResult(Set<Node> readyNodes, long nextReadyCheckDelayMs) {
+            this.readyNodes = readyNodes;
+            this.nextReadyCheckDelayMs = nextReadyCheckDelayMs;
+        }
     }
 
     private final static class IncompleteRecordBatches {

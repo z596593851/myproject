@@ -39,11 +39,11 @@ public class ProduceRequest extends AbstractRequest {
         Map<String, Map<Integer, ByteBuffer>> recordsByTopic = Utils.groupDataByTopic(partitionRecords);
         struct.set(ACKS_KEY_NAME, acks);
         struct.set(TIMEOUT_KEY_NAME, timeout);
-        List<Struct> topicDatas = new ArrayList<Struct>(recordsByTopic.size());
+        List<Struct> topicDatas = new ArrayList<>(recordsByTopic.size());
         for (Map.Entry<String, Map<Integer, ByteBuffer>> entry : recordsByTopic.entrySet()) {
             Struct topicData = struct.instance(TOPIC_DATA_KEY_NAME);
             topicData.set(TOPIC_KEY_NAME, entry.getKey());
-            List<Struct> partitionArray = new ArrayList<Struct>();
+            List<Struct> partitionArray = new ArrayList<>();
             for (Map.Entry<Integer, ByteBuffer> partitionEntry : entry.getValue().entrySet()) {
                 ByteBuffer buffer = partitionEntry.getValue().duplicate();
                 Struct part = topicData.instance(PARTITION_DATA_KEY_NAME)
@@ -62,7 +62,7 @@ public class ProduceRequest extends AbstractRequest {
 
     public ProduceRequest(Struct struct) {
         super(struct);
-        partitionRecords = new HashMap<TopicPartition, ByteBuffer>();
+        partitionRecords = new HashMap<>();
         for (Object topicDataObj : struct.getArray(TOPIC_DATA_KEY_NAME)) {
             Struct topicData = (Struct) topicDataObj;
             String topic = topicData.getString(TOPIC_KEY_NAME);

@@ -126,7 +126,7 @@ public class ConsumerNetworkClient {
             while (iterator.hasNext()) {
                 ClientRequest request = iterator.next();
                 //检查网络连接
-                client.initiateConnect();
+//                client.initiateConnect();
                 //同producer一样，调用send将请求放入inFlightRequests中
                 //同时往selector绑定write事件准备发送
                 client.send(request);

@@ -4,25 +4,36 @@ import com.hxm.client.common.utils.Utils;
 
 public class SocketServer {
 
-    //Processor线程个数
-    private int numProcessorThreads;
-    //网卡个数
-    private int endpoints=1;
-    //Processor线程总个数
-    //private int totalProcessorThreads;
-    //队列最大容量
-    private int maxQueuedRequests;
+    /**
+     * Processor线程个数
+     */
+    private final int numProcessorThreads;
+    /**
+     * 网卡个数
+     */
+    private final int endpoints;
+    /**
+     * Processor线程总个数
+     */
+    private final int totalProcessorThreads;
+    /**
+     * 队列最大容量
+     */
+    private final int maxQueuedRequests;
     //processor线程与handler线程之间交换数据的队列,总共有totalProcessorThreads个
-    private RequestChannel requestChannel;
-    //processor线程的集合
-    private Processor[] processors;
-    private String host;
-    private int port;
+    private final RequestChannel requestChannel;
+    /**
+     * processor线程的集合
+     */
+    private final Processor[] processors;
+    private final String host;
+    private final int port;
 
     public SocketServer(String host, int port){
+        this.endpoints=1;
         this.numProcessorThreads=3;
         this.maxQueuedRequests=10;
-        //this.totalProcessorThreads=this.endpoints*numProcessorThreads;
+        this.totalProcessorThreads=this.endpoints*numProcessorThreads;
         this.requestChannel = new RequestChannel(this.numProcessorThreads, this.maxQueuedRequests);
         this.processors=new Processor[this.numProcessorThreads];
         this.host=host;
@@ -42,12 +53,6 @@ public class SocketServer {
     }
     public RequestChannel getRequestChannel(){
         return this.requestChannel;
-    }
-
-    public static void main(String[] args) {
-        SocketServer socketServer=new SocketServer("127.0.0.1",6666);
-        socketServer.startup();
-//        KafkaRequestHandlerPool pool=new KafkaRequestHandlerPool(2,socketServer.getRequestChannel());
     }
 
 }

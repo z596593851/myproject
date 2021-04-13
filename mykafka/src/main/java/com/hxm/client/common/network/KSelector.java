@@ -281,6 +281,10 @@ public class KSelector {
         deque.add(receive);
     }
 
+    public boolean isChannelReady(String id) {
+        KafkaChannel channel = this.channels.get(id);
+        return channel != null && channel.ready();
+    }
     private boolean hasStagedReceive(KafkaChannel channel) {
         return stagedReceives.containsKey(channel);
     }

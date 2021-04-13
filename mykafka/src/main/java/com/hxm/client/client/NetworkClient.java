@@ -1,5 +1,6 @@
 package com.hxm.client.client;
 
+import com.hxm.client.common.Node;
 import com.hxm.client.common.network.KSelector;
 import com.hxm.client.common.network.NetworkReceive;
 import com.hxm.client.common.network.Send;
@@ -21,7 +22,7 @@ import java.util.List;
 public class NetworkClient {
 
     private KSelector selector;
-    private boolean isConnect=false;
+    private final ClusterConnectionStates connectionStates;
     private String id;
     private String host;
     private int port;
@@ -29,7 +30,7 @@ public class NetworkClient {
     private final InFlightRequests inFlightRequests;
     private final Time time;
 
-    public NetworkClient(KSelector selector, String id, String host, int port, Time time){
+    public NetworkClient(KSelector selector, String id, String host, int port,long reconnectBackoffMs, Time time){
         this.selector=selector;
         this.id=id;
         this.host=host;
@@ -37,6 +38,7 @@ public class NetworkClient {
         this.correlation=0;
         this.inFlightRequests = new InFlightRequests(5);
         this.time=time;
+        this.connectionStates=new ClusterConnectionStates(reconnectBackoffMs);
     }
 
     public void send(ClientRequest request){
@@ -46,7 +48,7 @@ public class NetworkClient {
     }
 
     public void poll(long timeout){
-        initiateConnect();
+
         try {
             selector.poll(timeout);
         } catch (IOException e) {
@@ -80,6 +82,10 @@ public class NetworkClient {
         }
     }
 
+    public long connectionDelay(Node node, long now) {
+        return connectionStates.connectionDelay(node.idString(), now);
+    }
+
     private void handleCompletedReceives(List<ClientResponse> responses, long now) {
         //completedReceives就是存接收到的响应
         for (NetworkReceive receive : this.selector.completedReceives()) {
@@ -89,23 +95,35 @@ public class NetworkClient {
             ClientRequest req = inFlightRequests.completeNext(source);
             //解析服务端发送回来的响应
             Struct body = parseResponse(receive.payload(), req.request().header());
-            if (!maybeHandleCompletedReceive(req, now, body))
-                //解析完后封装成ClientResponse，解析完后存放在list中
-            {
-                responses.add(new ClientResponse(req, now, false, body));
-            }
+            responses.add(new ClientResponse(req, now, false, body));
         }
     }
 
-    public boolean maybeHandleCompletedReceive(ClientRequest req, long now, Struct body) {
-        short apiKey = req.request().header().apiKey();
-//        if (apiKey == ApiKeys.METADATA.id && req.isInitiatedByNetworkClient()) {
-//            handleResponse(req.request().header(), body, now);
-//            return true;
-//        }
+    public boolean ready(Node node, long now) {
+        if (node.isEmpty()) {
+            throw new IllegalArgumentException("Cannot connect to empty node " + node);
+        }
+        //判断要发送消息的主机是否具备发送消息的条件
+        if (isReady(node, now)) {
+            return true;
+        }
+        //第一次进来是没有建立好的，尝试建立网络
+        if (connectionStates.canConnect(node.idString(), now)) {
+            initiateConnect(node, now);
+        }
         return false;
     }
 
+    public boolean isReady(Node node, long now) {
+        return canSendRequest(node.idString());
+    }
+
+    private boolean canSendRequest(String node) {
+        return connectionStates.isConnected(node) &&
+                selector.isChannelReady(node) &&
+                //每个往broker发送消息的连接，最多容忍5个消息发送出去了但是没有收到响应
+                inFlightRequests.canSendMore(node);
+    }
     public static Struct parseResponse(ByteBuffer responseBuffer, RequestHeader requestHeader) {
         ResponseHeader responseHeader = ResponseHeader.parse(responseBuffer);
         // Always expect the response version id to be the same as the request version id
@@ -126,15 +144,13 @@ public class NetworkClient {
         }
     }
 
-    public void initiateConnect(){
-        if(!isConnect){
-            try {
-                isConnect=true;
-                selector.connect(id,new InetSocketAddress(host,port),102400,102400);
-            } catch (IOException e) {
-                isConnect=false;
-                e.printStackTrace();
-            }
+    public void initiateConnect(Node node, long now){
+        String nodeConnectionId = node.idString();
+        try {
+            this.connectionStates.connecting(nodeConnectionId, now);
+            selector.connect(id,new InetSocketAddress(host,port),102400,102400);
+        } catch (IOException e) {
+            connectionStates.disconnected(nodeConnectionId, now);
         }
     }
 

@@ -1,21 +1,17 @@
 package com.hxm.client.client.producer;
 
+import com.hxm.client.client.NetworkClient;
 import com.hxm.client.client.producer.internals.Callback;
+import com.hxm.client.client.producer.internals.RecordAccumulator;
+import com.hxm.client.client.producer.internals.Sender;
+import com.hxm.client.common.TopicPartition;
 import com.hxm.client.common.network.KSelector;
+import com.hxm.client.common.record.CompressionType;
 import com.hxm.client.common.serialization.StringSerializer;
 import com.hxm.client.common.utils.KafkaThread;
-import com.hxm.client.client.NetworkClient;
-import com.hxm.client.client.producer.internals.RecordAccumulator;
-import com.hxm.client.client.producer.internals.RecordBatch;
-import com.hxm.client.client.producer.internals.Sender;
-import com.hxm.client.client.ClientRequest;
-import com.hxm.client.common.TopicPartition;
-import com.hxm.client.common.record.CompressionType;
 import com.hxm.client.common.utils.Time;
 import com.sun.xml.internal.ws.encoding.soap.SerializationException;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -38,9 +34,9 @@ public class KafkaProducer {
         //todo 压缩模式
         this.compressionType=CompressionType.NONE;
         //this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY, CompressionType.GZIP,new Time());
-        this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY,compressionType,time);
-        NetworkClient client=new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,time);
-        this.sender=new Sender(client,accumulator,new Time(), (short) 1,1);
+        this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY,compressionType,10L,100,time);
+        NetworkClient client=new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,50L,time);
+        this.sender=new Sender(client,accumulator,new Time(), (short) 1,1,1024*1024);
         this.ioThread=new KafkaThread("kafka-producer-network-thread",sender,true);
         this.ioThread.start();
     }
@@ -110,43 +106,6 @@ public class KafkaProducer {
                 }
             }
         }
-
-//        if (this.sender != null && this.ioThread != null && this.ioThread.isAlive()) {
-//            System.out.println("Proceeding to force close the producer since pending requests could not be completed " +
-//                    "within timeout "+timeout+" ms.");
-//            this.sender.forceClose();
-//            // Only join the sender thread when not calling from callback.
-//            if (!invokedFromCallback) {
-//                try {
-//                    this.ioThread.join();
-//                } catch (InterruptedException e) {
-//                    firstException.compareAndSet(null, e);
-//                }
-//            }
-//        }
-//
-//        ClientUtils.closeQuietly(interceptors, "producer interceptors", firstException);
-//        ClientUtils.closeQuietly(metrics, "producer metrics", firstException);
-//        ClientUtils.closeQuietly(keySerializer, "producer keySerializer", firstException);
-//        ClientUtils.closeQuietly(valueSerializer, "producer valueSerializer", firstException);
-//        AppInfoParser.unregisterAppInfo(JMX_PREFIX, clientId);
-//        log.debug("The Kafka producer has closed.");
-//        if (firstException.get() != null && !swallowException)
-//            throw new KafkaException("Failed to close kafka producer", firstException.get());
-    }
-
-    public static void main(String[] args) {
-        long BUFFER_MEMORY=32*1024*1024;
-        int BATCH_SIZE=8*1024;
-        RecordAccumulator accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY,CompressionType.GZIP,new Time());
-        KafkaProducer kafkaProducer=new KafkaProducer();
-
-        Sender sender=new Sender(null,accumulator,new Time(), (short) 1,1);
-        kafkaProducer.doSend(new ProducerRecord("xiaoming","123"),null);
-        kafkaProducer.doSend(new ProducerRecord("xiaohong","456"),null);
-        Map<Integer, List<RecordBatch>> batches = accumulator.drain();
-        //将发往同一个broker上面partition的数据组合成一个请求，而不是一个partition发一个请求，从而减少网络IO
-        List<ClientRequest> requests = sender.createProduceRequests(batches, 1L);
     }
 
 

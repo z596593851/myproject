@@ -155,4 +155,13 @@ public class BufferPool {
     public void deallocate(ByteBuffer buffer) {
         deallocate(buffer, buffer.capacity());
     }
+
+    public int queued() {
+        lock.lock();
+        try {
+            return this.waiters.size();
+        } finally {
+            lock.unlock();
+        }
+    }
 }

@@ -14,7 +14,7 @@ public class Schema extends Type {
 
     public Schema(Field... fs) {
         this.fields = new Field[fs.length];
-        this.fieldsByName = new HashMap<String, Field>();
+        this.fieldsByName = new HashMap<>();
         for (int i = 0; i < this.fields.length; i++) {
             Field field = fs[i];
             if (fieldsByName.containsKey(field.name)) {
