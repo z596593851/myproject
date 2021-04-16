@@ -42,6 +42,7 @@ public class Sender implements Runnable{
         while (running){
             run(time.milliseconds());
         }
+        run(100);
     }
 
     void run(long now){

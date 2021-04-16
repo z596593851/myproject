@@ -41,6 +41,8 @@ public class KafkaRequestHandler implements Runnable{
         switch (ApiKeys.forId(request.getRequestId())){
             case PRODUCE:handleProducerRequest(request);break;
             case FETCH:handleFetchRequest(request);break;
+            case METADATA:
+                System.out.println("metadata");
             default:throw new RuntimeException("Unknown api code " + request.getRequestId());
         }
 

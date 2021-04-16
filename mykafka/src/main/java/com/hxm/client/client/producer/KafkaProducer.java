@@ -97,7 +97,7 @@ public class KafkaProducer {
             } else {
                 // Try to close gracefully.
                 if (this.sender != null) {
-                    this.sender.initiateClose();
+//                    this.sender.initiateClose();
                 }
                 if (this.ioThread != null) {
                     try {

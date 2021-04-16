@@ -56,10 +56,14 @@ public class NetworkClient {
             //暂存发送请求
             doSend(clientRequest, now);
         } else if (connectionStates.canConnect(nodeConnectionId,now)) {
-            // we don't have a connection to this node right now, make one
-            log.debug("Initialize connection to node {} for sending metadata request", node.id());
             initiateConnect(node, now);
         }
+    }
+
+    private void doSend(ClientRequest request, long now) {
+        //暂存还没有收到响应的请求（默认5个），如果成功收到响应则会移除
+        this.inFlightRequests.add(request);
+        selector.send(request.request());
     }
 
     public void poll(long timeout){
