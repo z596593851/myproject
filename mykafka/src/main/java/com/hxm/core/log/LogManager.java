@@ -33,11 +33,14 @@ public class LogManager {
         this.scheduler=scheduler;
         this.flushCheckMs=flushCheckMs;
         this.flushCheckpointMs=flushCheckpointMs;
+        //创建log文件夹
         createAndValidateLogDirs(logDirs);
         recoveryPointCheckpoints=new HashMap<>();
+        //在log文件夹下创建checkpoint文件
         for (File dir : logDirs) {
             recoveryPointCheckpoints.put(dir,new OffsetCheckpoint(new File(dir,RecoveryPointCheckpointFile)));
         }
+        //恢复或者创建新的checkpoints文件
         loadLogs();
     }
 
@@ -64,7 +67,7 @@ public class LogManager {
                 //为每个目录都创建指定线程数的线程池
                 ExecutorService pool= Executors.newFixedThreadPool(ioThreads);
                 threadPools.add(pool);
-                //读取每个log目录下的recoveryPointsCheckpoint文件并生成TopicAndPartition和recoveryPoints的对应关系
+                //读取每个log目录下的checkpoint文件并生成TopicAndPartition和recoveryPoints的对应关系
                 //加载recoveryPoints
                 Map<TopicPartition,Long> recoveryPoints =recoveryPointCheckpoints.get(dir).read();
                 //为每个log文件夹创建一个runnable任务
@@ -111,9 +114,6 @@ public class LogManager {
 
     }
 
-    public Log getLog(){
-        return null;
-    }
     private void checkpointRecoveryPointOffsets(){
         for (File logDir : logDirs) {
             checkpointLogsInDir(logDir);
@@ -139,7 +139,9 @@ public class LogManager {
         if(log!=null){
             return log;
         }
+        //最上级log目录：/Users/boa/Desktop/log
         File dataDir=nextLogDir();
+        //xiaoming-0
         File dir=new File(dataDir,topicPartition.topic() + "-" + topicPartition.partition());
         dir.mkdir();
         log=new Log(dir,0L,scheduler,time);

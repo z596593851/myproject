@@ -6,6 +6,7 @@ import com.hxm.client.common.record.CompressionType;
 import com.hxm.client.common.record.Compressor;
 import com.hxm.client.common.record.Record;
 import com.hxm.client.common.utils.AbstractIterator;
+import com.hxm.core.common.LongRef;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -53,7 +54,7 @@ public class ByteBufferMessageSet extends MessageSet {
         return new RecordsIterator(this.buffer.duplicate(), shallow);
     }
 
-    public void validateMessagesAndAssignOffsets(long offsetCounter){
+    public void validateMessagesAndAssignOffsets(LongRef offsetCounter){
         //遍历深层
         Iterator<MessageAndOffset> iterator=this.iterator();
         List<Message> validatedMessages=new ArrayList<>();
@@ -63,8 +64,8 @@ public class ByteBufferMessageSet extends MessageSet {
             //...
             validatedMessages.add(message);
         }
-        //更新外层消息的offset，将其offset更新为内部最后一条压缩消息的offset
-        buffer.putLong(0,offsetCounter+validatedMessages.size()-1);
+        //更新外层消息的offset，将其offset更新为内部消息的个数-1
+        buffer.putLong(0,offsetCounter.addAndGet(validatedMessages.size())-1);
         //更新外层消息的时间戳、attribute和CRC32
         //...
         buffer.rewind();
@@ -73,10 +74,13 @@ public class ByteBufferMessageSet extends MessageSet {
     public int writeFullyTo(GatheringByteChannel channel){
         int written = 0;
         try {
+            //标记当前position的位置
             buffer.mark();
             while (written<sizeInBytes()){
+                //将ByteBufferMessageSet中的数据全部写入文件
                 written+=channel.write(buffer);
             }
+            //将position返回到上次标记的位置
             buffer.reset();
         } catch (IOException e) {
             e.printStackTrace();
@@ -238,7 +242,6 @@ public class ByteBufferMessageSet extends MessageSet {
                 try {
                     //获取消息
                     MessageAndOffset messageAndOffset = getNextEntry();
-                    // No more record to return.
                     if (messageAndOffset == null) {
                         return allDone();
                     }
@@ -277,15 +280,15 @@ public class ByteBufferMessageSet extends MessageSet {
 
         private MessageAndOffset getNextEntryFromStream() throws IOException {
             long offset = stream.readLong();
-            // read record size
             int size = stream.readInt();
             if (size < 0) {
                 throw new IllegalStateException("Record with size " + size);
             }
             ByteBuffer rec;
             if (type == CompressionType.NONE) {
-                //未压缩消息的处理
+                //在position处截断
                 rec = buffer.slice();
+                //一条消息的末尾处
                 int newPos = buffer.position() + size;
                 if (newPos > buffer.limit()) {
                     return null;

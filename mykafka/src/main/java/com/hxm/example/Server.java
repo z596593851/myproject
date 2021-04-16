@@ -13,14 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static String path="/Users/boa/Desktop/log";
+    private static String path="/Users/apple/Desktop/log";
 
     public static void main(String[] args) {
         File[] files= {new File(path)};
         Time time=new Time();
         KafkaScheduler kafkaScheduler=new KafkaScheduler(2);
         kafkaScheduler.startup();
-        LogManager logManager=new LogManager(files,2,kafkaScheduler,2000,60000);
+        //flushCheckMs:log刷盘间隔  flushCheckpointMs：checkpoints刷盘间隔
+        LogManager logManager=new LogManager(files,2,kafkaScheduler,2000,2000);
         logManager.startup();
         SocketServer socketServer=new SocketServer("127.0.0.1",6666);
         socketServer.startup();

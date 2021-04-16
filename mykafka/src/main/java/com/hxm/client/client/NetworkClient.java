@@ -4,6 +4,8 @@ import com.hxm.client.common.Node;
 import com.hxm.client.common.network.KSelector;
 import com.hxm.client.common.network.NetworkReceive;
 import com.hxm.client.common.network.Send;
+import com.hxm.client.common.requests.MetadataRequest;
+import com.hxm.client.common.requests.RequestSend;
 import com.hxm.client.common.utils.Time;
 import com.hxm.client.common.protocol.ApiKeys;
 import com.hxm.client.common.protocol.ProtoUtils;
@@ -21,20 +23,16 @@ import java.util.List;
 @Slf4j
 public class NetworkClient {
 
+    private final String clientId;
     private KSelector selector;
     private final ClusterConnectionStates connectionStates;
-    private String id;
-    private String host;
-    private int port;
     private int correlation;
     private final InFlightRequests inFlightRequests;
     private final Time time;
 
-    public NetworkClient(KSelector selector, String id, String host, int port,long reconnectBackoffMs, Time time){
+    public NetworkClient(KSelector selector, String clientId, long reconnectBackoffMs, Time time){
+        this.clientId=clientId;
         this.selector=selector;
-        this.id=id;
-        this.host=host;
-        this.port=port;
         this.correlation=0;
         this.inFlightRequests = new InFlightRequests(5);
         this.time=time;
@@ -47,8 +45,25 @@ public class NetworkClient {
         selector.send(request.request());
     }
 
-    public void poll(long timeout){
+    private void maybeUpdate(long now){
+        Node node=new Node(1,"127.0.0.1",6666);
+        String nodeConnectionId = node.idString();
+        //判断网络是否建立好
+        if (canSendRequest(nodeConnectionId)) {
+            //创建请求
+            RequestSend send=new RequestSend(nodeConnectionId,nextRequestHeader(ApiKeys.METADATA), MetadataRequest.allTopics().toStruct());
+            ClientRequest clientRequest = new ClientRequest(now,true,send,null);
+            //暂存发送请求
+            doSend(clientRequest, now);
+        } else if (connectionStates.canConnect(nodeConnectionId,now)) {
+            // we don't have a connection to this node right now, make one
+            log.debug("Initialize connection to node {} for sending metadata request", node.id());
+            initiateConnect(node, now);
+        }
+    }
 
+    public void poll(long timeout){
+        maybeUpdate(timeout);
         try {
             selector.poll(timeout);
         } catch (IOException e) {
@@ -148,18 +163,18 @@ public class NetworkClient {
         String nodeConnectionId = node.idString();
         try {
             this.connectionStates.connecting(nodeConnectionId, now);
-            selector.connect(id,new InetSocketAddress(host,port),102400,102400);
+            selector.connect(nodeConnectionId,new InetSocketAddress(node.host(),node.port()),102400,102400);
         } catch (IOException e) {
             connectionStates.disconnected(nodeConnectionId, now);
         }
     }
 
     public RequestHeader nextRequestHeader(ApiKeys key) {
-        return new RequestHeader(key.id, id, correlation++);
+        return new RequestHeader(key.id, clientId, correlation++);
     }
 
     public RequestHeader nextRequestHeader(ApiKeys key, short version) {
-        return new RequestHeader(key.id,version, id, correlation++);
+        return new RequestHeader(key.id,version, clientId, correlation++);
     }
 
     public void wakeup() {

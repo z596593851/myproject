@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class KafkaProducer {
+    private final String clientId;
     private final StringSerializer keySerializer;
     private final StringSerializer valueSerializer;
     private final Time time;
@@ -28,6 +29,7 @@ public class KafkaProducer {
     private final Thread ioThread;
 
     public KafkaProducer(){
+        this.clientId="DemoProducer";
         this.keySerializer=new StringSerializer();
         this.valueSerializer=new StringSerializer();
         this.time=new Time();
@@ -35,13 +37,14 @@ public class KafkaProducer {
         this.compressionType=CompressionType.NONE;
         //this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY, CompressionType.GZIP,new Time());
         this.accumulator=new RecordAccumulator(BATCH_SIZE,BUFFER_MEMORY,compressionType,10L,100,time);
-        NetworkClient client=new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,50L,time);
+        NetworkClient client=new NetworkClient(new KSelector(102400),clientId,50L,time);
         this.sender=new Sender(client,accumulator,new Time(), (short) 1,1,1024*1024);
         this.ioThread=new KafkaThread("kafka-producer-network-thread",sender,true);
         this.ioThread.start();
     }
     public Future<RecordMetadata> doSend(ProducerRecord record, Callback callback) {
         try {
+            sender.wakeup();
             byte[] serializedKey;
             try {
                 serializedKey = keySerializer.serialize(record.topic(), record.key());
@@ -85,7 +88,7 @@ public class KafkaProducer {
             throw new IllegalArgumentException("The timeout cannot be negative.");
         }
 
-        AtomicReference<Throwable> firstException = new AtomicReference<Throwable>();
+        AtomicReference<Throwable> firstException = new AtomicReference<>();
         boolean invokedFromCallback = Thread.currentThread() == this.ioThread;
         if (timeout > 0) {
             if (invokedFromCallback) {

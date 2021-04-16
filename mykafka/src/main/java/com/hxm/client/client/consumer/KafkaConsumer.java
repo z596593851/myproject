@@ -21,6 +21,7 @@ import static java.util.Arrays.asList;
 @Slf4j
 public class KafkaConsumer<K,V> {
 
+    private final String clientId;
     private final Fetcher<K,V> fetcher;
     private final ConsumerNetworkClient client;
     private final Time time;
@@ -29,8 +30,9 @@ public class KafkaConsumer<K,V> {
     private final Deserializer valueDeserializer;
 
     public KafkaConsumer() {
+        this.clientId="DemoProducer";
         this.time=new Time();
-        NetworkClient networkClient = new NetworkClient(new KSelector(102400),"1","127.0.0.1",6666,50L,time);
+        NetworkClient networkClient = new NetworkClient(new KSelector(102400),clientId,50L,time);
         this.subscriptions=new SubscriptionState();
         //暂时手动插入
         TopicPartition tp1=new TopicPartition("liu",0);

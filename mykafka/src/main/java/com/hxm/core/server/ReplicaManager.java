@@ -11,7 +11,6 @@ import com.hxm.core.message.MessageSet;
 import com.hxm.client.common.utils.Time;
 import com.hxm.client.common.TopicPartition;
 import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +40,7 @@ public class ReplicaManager {
             Partition partition=getOrCreatePartition(topicPartition.topic(),topicPartition.partition());
             partitionsTobeLeader.add(partition);
         });
+        //加载或创建topic对应的文件
         makeLeaders(partitionsTobeLeader);
 
     }

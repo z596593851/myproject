@@ -50,7 +50,7 @@ public class OffsetIndex {
             //相对offset
             getMmap().putInt((int)(offset-baseOffset));
             getMmap().putInt(position);
-            entries++;
+            entries+=1;
             lastOffset=offset;
         }
     }
@@ -60,25 +60,29 @@ public class OffsetIndex {
             //如果索引文件不存在，则创建新文件并返回true
             boolean newlyCreated=file.createNewFile();
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
-            //对于新建的索引进行扩容
-            if(newlyCreated) {
-                if(maxIndexSize < entrySize) {
-                    throw new IllegalArgumentException("Invalid max index size: " + maxIndexSize);
+            try {
+                //对于新建的索引进行扩容
+                if(newlyCreated) {
+                    if(maxIndexSize < entrySize) {
+                        throw new IllegalArgumentException("Invalid max index size: " + maxIndexSize);
+                    }
+                    //根据maxIndexSize对索引扩容，结果是小于maxIndexSize的最大的8的倍数
+                    raf.setLength(roundDownToExactMultiple(maxIndexSize, entrySize));
                 }
-                //根据maxIndexSize对索引扩容，结果是小于maxIndexSize的最大的8的倍数
-                raf.setLength(roundDownToExactMultiple(maxIndexSize, entrySize));
+                //进行内存映射
+                long len = raf.length();
+                MappedByteBuffer idx = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, len);
+                //将新创建的索引文件的position设置为0，从头开始写文件
+                if(newlyCreated) {
+                    idx.position(0);
+                } else {
+                    //对于原来就存在的索引文件，将position移动到所有索引项的结束位置
+                    idx.position(roundDownToExactMultiple(idx.limit(), entrySize));
+                }
+                return idx;
+            } finally {
+                raf.close();
             }
-            //进行内存映射
-            long len = raf.length();
-            MappedByteBuffer idx = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, len);
-            //将新创建的索引文件的position设置为0，从头开始写文件
-            if(newlyCreated) {
-                idx.position(0);
-            } else {
-                //对于原来就存在的索引文件，将position移动到所有索引项的结束位置
-                idx.position(roundDownToExactMultiple(idx.limit(), entrySize));
-            }
-            return idx;
         } catch (IOException e) {
             e.printStackTrace();
         }

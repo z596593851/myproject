@@ -244,7 +244,7 @@ public class KSelector {
                     }
                 }
                 if (key.isWritable()) {
-//                    System.out.println("有write事件");
+                    System.out.println("有write事件");
                     //给borker发送请求
                     Send send = channel.write();
                     if (send != null) {
@@ -272,7 +272,7 @@ public class KSelector {
     private void addToStagedReceives(KafkaChannel channel, NetworkReceive receive) {
         //一个channel对应一个与kafka主机的连接，用stagedReceives来存放
         if (!stagedReceives.containsKey(channel)) {
-            stagedReceives.put(channel, new ArrayDeque<NetworkReceive>());
+            stagedReceives.put(channel, new ArrayDeque<>());
         }
 
         Deque<NetworkReceive> deque = stagedReceives.get(channel);

@@ -141,6 +141,7 @@ public class RecordAccumulator {
         RecordBatch last = deque.peekLast();
         if (last != null) {
             FutureRecordMetadata future = last.tryAppend(timestamp, key, value, callback, time.milliseconds());
+            //当前RecordBatch写满了
             if (future == null) {
                 last.records.close();
             } else {

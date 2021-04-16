@@ -97,8 +97,15 @@ public class Protocol {
                                                                           "Duration in milliseconds for which the request was throttled" +
                                                                               " due to quota violation. (Zero if the request did not violate any quota.)",
                                                                           0));
+    public static final Schema METADATA_REQUEST_V0 = new Schema(new Field("topics",
+            new ArrayOf(STRING),
+            "An array of topics to fetch metadata for. If no topics are specified fetch metadata for all topics."));
+    public static final Schema METADATA_REQUEST_V1=METADATA_REQUEST_V0;
+    public static final Schema METADATA_REQUEST_V2=METADATA_REQUEST_V0;
     public static final Schema[] PRODUCE_REQUEST = new Schema[] {PRODUCE_REQUEST_V0, PRODUCE_REQUEST_V1, PRODUCE_REQUEST_V2};
     public static final Schema[] PRODUCE_RESPONSE = new Schema[] {PRODUCE_RESPONSE_V0, PRODUCE_RESPONSE_V1, PRODUCE_RESPONSE_V2};
+
+    public static final Schema[] METADATA_REQUEST = new Schema[] {METADATA_REQUEST_V0, METADATA_REQUEST_V1, METADATA_REQUEST_V2};
 
     /* Offset fetch api */
 
@@ -205,7 +212,7 @@ public class Protocol {
     static {
         REQUESTS[ApiKeys.PRODUCE.id] = PRODUCE_REQUEST;
         REQUESTS[ApiKeys.FETCH.id] = FETCH_REQUEST;
-
+        REQUESTS[ApiKeys.METADATA.id] = METADATA_REQUEST;
 
         RESPONSES[ApiKeys.PRODUCE.id] = PRODUCE_RESPONSE;
         RESPONSES[ApiKeys.FETCH.id] = FETCH_RESPONSE;

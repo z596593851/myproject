@@ -1,14 +1,15 @@
 package com.hxm.core.log;
 
-import com.hxm.core.utils.KafkaScheduler;
-import com.hxm.core.server.LogOffsetMetadata;
+import com.hxm.client.common.TopicPartition;
+import com.hxm.client.common.utils.Time;
+import com.hxm.core.common.LongRef;
 import com.hxm.core.message.ByteBufferMessageSet;
 import com.hxm.core.message.Message;
 import com.hxm.core.message.MessageAndOffset;
 import com.hxm.core.message.MessageSet;
 import com.hxm.core.server.FetchDataInfo;
-import com.hxm.client.common.utils.Time;
-import com.hxm.client.common.TopicPartition;
+import com.hxm.core.server.LogOffsetMetadata;
+import com.hxm.core.utils.KafkaScheduler;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,6 @@ public class Log {
     private final Time time;
     private volatile long recoveryPoint;
     private final ConcurrentNavigableMap<Long,LogSegment> segments;
-//    private LogSegment activeSegment=getActiveSegment();
     private volatile LogOffsetMetadata nextOffsetMetadata;
     private final KafkaScheduler scheduler;
 
@@ -39,6 +39,7 @@ public class Log {
         this.scheduler=scheduler;
         this.time=time;
         this.segments=new ConcurrentSkipListMap<>();
+        //恢复或者创建新的.log和.index
         loadSegments();
         this.nextOffsetMetadata=new LogOffsetMetadata(getActiveSegment().nextOffset(), getActiveSegment().getBaseOffset(), (int)getActiveSegment().size());
     }
@@ -88,7 +89,6 @@ public class Log {
         for(File file:dir.listFiles()){
             if(file.isFile()){
                 String filename=file.getName();
-                //处理索引文件
                 if(filename.endsWith(IndexFileSuffix)){
                     File logFile=new File(file.getAbsolutePath().replace(IndexFileSuffix, LogFileSuffix));
                     if(!logFile.exists()) {
@@ -96,12 +96,12 @@ public class Log {
                         file.delete();
                     }
                 }else if(filename.endsWith(LogFileSuffix)){
-                    //如果是log文件，读取对应的log segment
+                    //此log文件对应的segment的startOffset
                     long start = Long.parseLong(filename.substring(0, filename.length() - LogFileSuffix.length()));
                     File indexFile = Log.indexFilename(dir, start);
                     boolean indexFileExists = indexFile.exists();
+                    System.out.println("恢复index和log...");
                     LogSegment segment = new LogSegment(dir, start, 4096, 10485760, true,0,false);
-
                     if (indexFileExists) {
                         segment.index().sanityCheck();
                     } else {
@@ -159,20 +159,25 @@ public class Log {
         LogAppendInfo appendInfo=analyzeAndValidateMessageSet(messages);
         //2、将未通过上述检查的部分截断
         ByteBufferMessageSet validMessages=trimInvalidBytes(messages,appendInfo);
-        //拿到最后一个索引项的offset
-        long offset=nextOffsetMetadata.getMessageOffset();
+        //拿到最后一个索引项的offset。初始值是0
+        LongRef offset=new LongRef(nextOffsetMetadata.getMessageOffset());
+        appendInfo.setFirstOffset(offset.getValue());
         //3、进一步验证并分配offset
         validMessages.validateMessagesAndAssignOffsets(offset);
         //记录最后一条消息的offset，并不受压缩消息的影响
-        appendInfo.lastOffset=offset-1;
+        appendInfo.setLastOffset(offset.getValue()-1);
+        /*假设nextOffsetMetadata.getMessageOffset()的值是0，内层消息的个数为5，经过上述步骤
+        appendInfo.firstoffset=0, appendInfo.lastOffset=0+5-1=4
+        buffer.offset=0+5-1=4
+         */
         //5、检测是否满足创建新activeSegment的条件，如满足则创建
         LogSegment segment=maybeRoll(validMessages.sizeInBytes());
         //6、追加消息
-        segment.append(validMessages.sizeInBytes(),messages);
+        segment.append(appendInfo.getFirstOffset(), messages);
         //7、更新LEO
-        updateLogEndOffset(appendInfo.lastOffset+1);
+        updateLogEndOffset(appendInfo.getLastOffset()+1);
         //8、检测未刷新到磁盘的数据是否达到一定阈值，如果是则调用flush()方法刷新
-        if (unflushedMessages() >= 10000) {
+        if (unflushedMessages() >= 1) {
             flush();
         }
         return appendInfo;
@@ -204,7 +209,7 @@ public class Log {
     }
 
     private long unflushedMessages(){
-        return this.logEndOffset() - this.recoveryPoint;
+        return logEndOffset() - this.recoveryPoint;
     }
 
     private LogSegment maybeRoll(int messagesSize){
@@ -334,7 +339,7 @@ public class Log {
         int shallowMessageCount = 0;
         //记录通过验证的Message的字节数之和
         int validBytesCount = 0;
-        //第一条消息和最后一条消息的offset
+        //第一条消息和最后一条消息的offset（外层）
         long firstOffset= -1L;
         long lastOffset = -1L;
         //offset是否单调递增
@@ -379,6 +384,22 @@ public class Log {
             this.shallowMessageCount = shallowMessageCount;
             this.validBytesCount = validBytesCount;
             this.monotonic = monotonic;
+        }
+
+        public void setFirstOffset(long firstOffset) {
+            this.firstOffset = firstOffset;
+        }
+
+        public void setLastOffset(long lastOffset) {
+            this.lastOffset = lastOffset;
+        }
+
+        public long getFirstOffset() {
+            return firstOffset;
+        }
+
+        public long getLastOffset() {
+            return lastOffset;
         }
     }
 

@@ -61,6 +61,7 @@ public class Sender implements Runnable{
                 notReadyTimeout = Math.min(notReadyTimeout, this.client.connectionDelay(node, now));
             }
         }
+//        client.poll(0);
         //将在同一个broker上的leader partition分为一组
         Map<Integer, List<RecordBatch>> batches = accumulator.drain(cluster,result.readyNodes,this.maxRequestSize,now);
         if(!batches.isEmpty()){
@@ -79,7 +80,7 @@ public class Sender implements Runnable{
     private Cluster defultCluster(){
         Node node=new Node(1,"127.0.0.1",6666);
         List<Node> nodes=new ArrayList<>();
-        PartitionInfo partitionInfo=new PartitionInfo("xiaoming",0,node);
+        PartitionInfo partitionInfo=new PartitionInfo("liu",0,node);
         List<PartitionInfo> partitions=new ArrayList<>();
         nodes.add(node);
         partitions.add(partitionInfo);

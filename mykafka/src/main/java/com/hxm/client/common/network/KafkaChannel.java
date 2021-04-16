@@ -6,24 +6,14 @@ import java.nio.channels.SelectionKey;
 
 public class KafkaChannel {
     private String id;
-//    private SelectionKey key;
     private Send send;
-    //private SocketChannel socketChannel;
     private NetworkReceive receive;
     private final int maxReceiveSize;
     private TransportLayer transportLayer;
 
-//    public KafkaChannel(String id, SelectionKey key,int maxReceiveSize) {
-//        this.id = id;
-//        this.key = key;
-//        this.socketChannel=(SocketChannel)key.channel();
-//        this.maxReceiveSize=maxReceiveSize;
-//    }
-
     public KafkaChannel(String id, TransportLayer transportLayer,int maxReceiveSize) {
         this.id = id;
         this.transportLayer = transportLayer;
-       // this.socketChannel=(SocketChannel)key.channel();
         this.maxReceiveSize=maxReceiveSize;
     }
 
@@ -33,27 +23,17 @@ public class KafkaChannel {
         }
         this.send = send;
         //绑定一个OP_WRITE事件
-//        this.key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
         System.out.println("注册OP_WRITE");
         this.transportLayer.addInterestOps(SelectionKey.OP_WRITE);
     }
 
     public void mute(){
-//        key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
         transportLayer.removeInterestOps(SelectionKey.OP_READ);
     }
 
     public void unmute(){
-//        if (!key.isValid()) {
-//            throw new CancelledKeyException();
-//        }
-//        this.key.interestOps(key.interestOps() | SelectionKey.OP_READ);
         transportLayer.addInterestOps(SelectionKey.OP_READ);
     }
-
-//    public InetAddress socketAddress() {
-//        return this.socketChannel.socket().getInetAddress();
-//    }
 
     public void close(){
         try {

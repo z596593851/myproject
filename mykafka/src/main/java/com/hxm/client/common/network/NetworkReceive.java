@@ -55,9 +55,6 @@ public class NetworkReceive {
         return readFromReadableChannel(channel);
     }
 
-    // Need a method to read from ReadableByteChannel because BlockingChannel requires read with timeout
-    // See: http://stackoverflow.com/questions/2866557/timeout-for-socketchannel-doesnt-work
-    // This can go away after we get rid of BlockingChannel
     @Deprecated
     public long readFromReadableChannel(ReadableByteChannel channel) throws IOException {
         int read = 0;
@@ -95,10 +92,5 @@ public class NetworkReceive {
 
     public ByteBuffer payload() {
         return this.buffer;
-    }
-
-    public static void main(String[] args) {
-        ByteBuffer size=ByteBuffer.allocate(4);
-        System.out.println(size.hasRemaining());
     }
 }

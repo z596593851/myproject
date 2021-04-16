@@ -1,6 +1,9 @@
 package com.hxm.client.common;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TopicPartition implements Serializable {
     private int hash = 0;
@@ -61,5 +64,14 @@ public class TopicPartition implements Serializable {
     @Override
     public String toString() {
         return topic + "-" + partition;
+    }
+
+    public static void main(String[] args) {
+        Set set=new HashSet();
+        TopicPartition t1=new TopicPartition("xiaoming",0);
+        TopicPartition t2=new TopicPartition("xiaoming",1);
+        set.add(t1);
+        set.add(t2);
+        System.out.println(set.size());
     }
 }

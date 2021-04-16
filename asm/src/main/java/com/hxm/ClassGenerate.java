@@ -20,8 +20,10 @@ public class ClassGenerate {
                 "(Ljava/lang/Object;)I", null, null).visitEnd();
         cw.visitEnd();
         byte[] b = cw.toByteArray();
-
+        Object o=new Object();
         MyClassLoader classLoade=new MyClassLoader();
         Class c=classLoade.defineClass("com.hxm.Comparable",b);
+        int i=(int)c.getField("EQUAL").get(o);
+        System.out.println(i);
     }
 }
