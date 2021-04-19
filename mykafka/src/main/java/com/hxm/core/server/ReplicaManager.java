@@ -116,7 +116,7 @@ public class ReplicaManager {
 
     public LogReadResult read(TopicPartition tp, PartitionFetchInfo fetchInfo, int limitBytes, boolean minOneMessage){
         Replica localReplica=getPartition(tp.topic(),tp.partition()).leaderReplicaIfLocal();
-        LogOffsetMetadata initialLogEndOffset = localReplica.logEndOffset();
+        LogOffsetMetadata initialLogEndOffset = localReplica.getLogEndOffset();
         FetchDataInfo logReadInfo=null;
         Log log=localReplica.getLog();
         if(log==null){
@@ -124,7 +124,7 @@ public class ReplicaManager {
             logReadInfo=new FetchDataInfo(LogOffsetMetadata.UnknownOffsetMetadata, MessageSet.Empty,false);
         }else {
             int adjustedFetchSize = Math.min(fetchInfo.getFetchSize(), limitBytes);
-//            FetchDataInfo fetch = log.read(0, adjustedFetchSize, null, minOneMessage);
+            //fetchInfo.getOffset()是fetchrequest请求的开始offset
             FetchDataInfo fetch = log.read(fetchInfo.getOffset(), adjustedFetchSize, null, minOneMessage);
             if (!hardMaxBytesLimit && fetch.isFirstMessageSetIncomplete()) {
                 logReadInfo = new FetchDataInfo(fetch.getFetchOffsetMetadata(), MessageSet.Empty, false);

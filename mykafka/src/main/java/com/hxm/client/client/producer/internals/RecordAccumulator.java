@@ -234,6 +234,7 @@ public class RecordAccumulator {
                         backingOff：重新发送的时间到了
                          */
                         //waitedTimeMs：这个批次已经等了多久
+                        System.out.println("等待了"+(nowMs - batch.lastAttemptMs));
                         long waitedTimeMs = nowMs - batch.lastAttemptMs;
                         //lingerMs：如果没有凑齐一个批次，要等待多久再发送。默认0
                         //如果不设置的话，就代表来一条消息就发送一条，明显不合适，所以需要配置
@@ -247,6 +248,7 @@ public class RecordAccumulator {
                         //一个批次写满了 || 时间到了（即使批次没写满） || 内存不足 ||
                         boolean sendable = full || expired || exhausted || closed;
                         if (sendable) {
+                            System.out.println(String.format("Accumulator状态: full-%s,expired-%s,exhausted-%s,closed-%s",full,expired,exhausted,closed));
                             //把可以发送批次的partition的leader partition所在的主机加入到readyNodes
                             readyNodes.add(leader);
                         } else {
@@ -308,5 +310,16 @@ public class RecordAccumulator {
                 return new ArrayList<>(this.incomplete);
             }
         }
+    }
+    public boolean hasUnsent() {
+        for (Map.Entry<TopicPartition, Deque<RecordBatch>> entry : this.batches.entrySet()) {
+            Deque<RecordBatch> deque = entry.getValue();
+            synchronized (deque) {
+                if (!deque.isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

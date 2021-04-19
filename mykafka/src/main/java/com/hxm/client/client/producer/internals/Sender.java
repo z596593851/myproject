@@ -13,9 +13,12 @@ import com.hxm.client.common.requests.ProduceRequest;
 import com.hxm.client.common.requests.RequestHeader;
 import com.hxm.client.common.requests.RequestSend;
 import com.hxm.client.common.utils.Time;
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.ByteBuffer;
 import java.util.*;
 
+@Slf4j
 public class Sender implements Runnable{
 
     private final RecordAccumulator accumulator;
@@ -26,6 +29,7 @@ public class Sender implements Runnable{
     private final NetworkClient client;
     /* the maximum request size to attempt to send to the server */
     private final int maxRequestSize;
+    private volatile boolean forceClose;
 
     public Sender(NetworkClient client,RecordAccumulator accumulator, Time time, short acks, int requestTimeout, int maxRequestSize){
         this.running=true;
@@ -39,10 +43,19 @@ public class Sender implements Runnable{
 
     @Override
     public void run() {
+        System.out.println("Sender启动");
         while (running){
             run(time.milliseconds());
         }
-        run(100);
+        while (!forceClose && (this.accumulator.hasUnsent())) {
+            try {
+                System.out.println("accumulator仍有剩余");
+                run(time.milliseconds());
+            } catch (Exception e) {
+                log.error("Uncaught error in kafka producer I/O thread: ", e);
+            }
+        }
+//        run(100);
     }
 
     void run(long now){
@@ -62,8 +75,8 @@ public class Sender implements Runnable{
                 notReadyTimeout = Math.min(notReadyTimeout, this.client.connectionDelay(node, now));
             }
         }
-//        client.poll(0);
         //将在同一个broker上的leader partition分为一组
+        //第一次执行时，readyNodes在上一步被remove，所以batches为空
         Map<Integer, List<RecordBatch>> batches = accumulator.drain(cluster,result.readyNodes,this.maxRequestSize,now);
         if(!batches.isEmpty()){
             //将发往同一个broker上面partition的数据组合成一个请求，而不是一个partition发一个请求，从而减少网络IO
@@ -125,5 +138,10 @@ public class Sender implements Runnable{
         this.accumulator.close();
         this.running = false;
         this.wakeup();
+    }
+
+    public void forceClose() {
+        this.forceClose = true;
+        initiateClose();
     }
 }

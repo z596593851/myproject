@@ -1,6 +1,7 @@
 package com.hxm.client.client.consumer.internals;
 
 import com.hxm.client.client.consumer.ConsumerRecord;
+import com.hxm.client.common.internals.PartitionStates;
 import com.hxm.client.common.utils.Utils;
 import com.hxm.client.client.ClientResponse;
 import com.hxm.client.common.Node;
@@ -340,7 +341,7 @@ public class Fetcher<K, V>{
                 fetch = new LinkedHashMap<>();
                 fetchable.put(node, fetch);
             }
-
+            //下一次要拉取的offset
             long position = this.subscriptions.position(partition);
             //记录每个分区对应的position，即要fetch消息的offset
             fetch.put(partition, new FetchRequest.PartitionData(position, this.fetchSize));
@@ -359,8 +360,16 @@ public class Fetcher<K, V>{
 
     private List<TopicPartition> fetchablePartitions() {
         //分配给当前消费者的分区
-        List<TopicPartition> fetchable=new ArrayList<>();
-        fetchable.add(new TopicPartition("liu",0));
+//        List<TopicPartition> fetchable=new ArrayList<>();
+//        fetchable.add(new TopicPartition("liu",0));
+//        return fetchable;
+        List<TopicPartition> fetchable = subscriptions.fetchablePartitions();
+        if (nextInLineRecords != null && !nextInLineRecords.isEmpty()) {
+            fetchable.remove(nextInLineRecords.partition);
+        }
+        for (CompletedFetch completedFetch : completedFetches) {
+            fetchable.remove(completedFetch.partition);
+        }
         return fetchable;
     }
 

@@ -113,6 +113,7 @@ public class LogSegment {
     }
 
     public FetchDataInfo read(long startOffset, Long maxOffset, int maxSize, long maxPosition, boolean minOneMessage){
+        //todo 0419
         if (maxSize < 0) {
             throw new IllegalArgumentException(String.format("Invalid max size for log read (%d)",maxSize));
         }
@@ -151,7 +152,9 @@ public class LogSegment {
     }
 
     private OffsetPositionAndSize translateOffset(long offset, int startingFilePosition){
+        //从索引中找到小于给定offset的最大offset，返回其物理地址
         int position=index.lookup(offset);
+        //从指定的offset开始逐条遍历FileMessageSet中的消息，直到offset大于等于targetOffset，最后返回找到的offset
         return log.searchForOffsetWithSize(offset, Math.max(position, startingFilePosition));
     }
 

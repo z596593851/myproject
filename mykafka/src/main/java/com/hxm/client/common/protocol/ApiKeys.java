@@ -6,7 +6,7 @@ package com.hxm.client.common.protocol;
 public enum ApiKeys {
     PRODUCE(0, "Produce"),
     FETCH(1, "Fetch"),
-    METADATA(3, "Metadata");
+    METADATA(2, "Metadata");
     private static final ApiKeys[] ID_TO_TYPE;
     private static final int MIN_API_KEY = 0;
     public static final int MAX_API_KEY;

@@ -42,7 +42,7 @@ public class KafkaRequestHandler implements Runnable{
             case PRODUCE:handleProducerRequest(request);break;
             case FETCH:handleFetchRequest(request);break;
             case METADATA:
-                System.out.println("metadata");
+                System.out.println("收到metadata消息");break;
             default:throw new RuntimeException("Unknown api code " + request.getRequestId());
         }
 

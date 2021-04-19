@@ -10,8 +10,7 @@ public class Replica {
     private final Partition partition;
     private final Log log;
     private final Time time;
-    private LogOffsetMetadata logEndOffsetMetadata;
-    private LogOffsetMetadata logEndOffset;
+    private volatile LogOffsetMetadata logEndOffsetMetadata;
 
     public Replica(int brokerId, Partition partition, Time time, Log log) {
         this.brokerId = brokerId;
@@ -19,7 +18,6 @@ public class Replica {
         this.time=time;
         this.log=log;
         this.logEndOffsetMetadata=LogOffsetMetadata.UnknownOffsetMetadata;
-        this.logEndOffset=getLogEndOffset();
 
     }
 
@@ -35,10 +33,6 @@ public class Replica {
         return log;
     }
 
-    public LogOffsetMetadata logEndOffset(){
-        return this.logEndOffset;
-    }
-
     public LogOffsetMetadata getLogEndOffset(){
         if(log!=null){
             return log.logEndOffsetMetadata();
@@ -48,6 +42,6 @@ public class Replica {
     }
 
     public void updateLogReadResult(LogReadResult logReadResult){
-        this.logEndOffset=logReadResult.getInfo().getFetchOffsetMetadata();
+        this.logEndOffsetMetadata=logReadResult.getInfo().getFetchOffsetMetadata();
     }
 }

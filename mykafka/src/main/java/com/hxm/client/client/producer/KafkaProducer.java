@@ -97,7 +97,7 @@ public class KafkaProducer {
             } else {
                 // Try to close gracefully.
                 if (this.sender != null) {
-//                    this.sender.initiateClose();
+                    this.sender.initiateClose();
                 }
                 if (this.ioThread != null) {
                     try {
@@ -106,6 +106,17 @@ public class KafkaProducer {
                         firstException.compareAndSet(null, t);
                         System.out.println("Interrupted while joining ioThread");
                     }
+                }
+            }
+        }
+        if (this.sender != null && this.ioThread != null && this.ioThread.isAlive()) {
+            this.sender.forceClose();
+            // Only join the sender thread when not calling from callback.
+            if (!invokedFromCallback) {
+                try {
+                    this.ioThread.join();
+                } catch (InterruptedException e) {
+                    firstException.compareAndSet(null, e);
                 }
             }
         }

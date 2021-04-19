@@ -97,7 +97,7 @@ public class FetchRequest extends AbstractRequest {
         if (version >= 3) {
             struct.set(MAX_BYTES_KEY_NAME, maxBytes);
         }
-        List<Struct> topicArray = new ArrayList<Struct>();
+        List<Struct> topicArray = new ArrayList<>();
         for (TopicAndPartitionData<PartitionData> topicEntry : topicsData) {
             Struct topicData = struct.instance(TOPICS_KEY_NAME);
             topicData.set(TOPIC_KEY_NAME, topicEntry.topic);

@@ -111,7 +111,9 @@ public class ConsumerNetworkClient {
     public void poll(long timeout, long now, PollCondition pollCondition) {
         firePendingCompletedRequests();
         trySend(now);
-        client.poll(now);
+        if (pollCondition == null || pollCondition.shouldBlock()) {
+            client.poll(now);
+        }
         firePendingCompletedRequests();
     }
 
@@ -126,12 +128,13 @@ public class ConsumerNetworkClient {
             while (iterator.hasNext()) {
                 ClientRequest request = iterator.next();
                 //检查网络连接
-//                client.initiateConnect();
-                //同producer一样，调用send将请求放入inFlightRequests中
-                //同时往selector绑定write事件准备发送
-                client.send(request);
-                iterator.remove();
-                requestsSent = true;
+                if(client.ready(node, now)){
+                    //同producer一样，调用send将请求放入inFlightRequests中
+                    //同时往selector绑定write事件准备发送
+                    client.send(request);
+                    iterator.remove();
+                    requestsSent = true;
+                }
             }
         }
         return requestsSent;

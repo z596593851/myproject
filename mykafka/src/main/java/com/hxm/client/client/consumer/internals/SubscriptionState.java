@@ -77,6 +77,16 @@ public class SubscriptionState {
         return map;
     }
 
+    public List<TopicPartition> fetchablePartitions() {
+        List<TopicPartition> fetchable = new ArrayList<>();
+        for (PartitionStates.PartitionState<TopicPartitionState> state : assignment.partitionStates()) {
+            if (state.value().isFetchable()) {
+                fetchable.add(state.topicPartition());
+            }
+        }
+        return fetchable;
+    }
+
     private static class TopicPartitionState {
         //下次要从broker获取的消息的offset
         private Long position; // last consumed position

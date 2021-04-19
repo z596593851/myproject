@@ -42,7 +42,6 @@ public class KafkaConsumer<K,V> {
 
 
         this.client=new ConsumerNetworkClient(networkClient);
-        //todo
         this.keyDeserializer=new StringDeserializer();
         this.valueDeserializer=new StringDeserializer();
         this.fetcher=new Fetcher<K,V>(client,time,1,50 * 1024 * 1024,100,10 * 1024,500, false, subscriptions,keyDeserializer,valueDeserializer);
@@ -111,14 +110,7 @@ public class KafkaConsumer<K,V> {
         long now = time.milliseconds();
 
         //发送FetchRequest
-        client.poll(timeout, now, new ConsumerNetworkClient.PollCondition() {
-            @Override
-            public boolean shouldBlock() {
-                // since a fetch might be completed by the background thread, we need this poll condition
-                // to ensure that we do not block unnecessarily in poll()
-                return !fetcher.hasCompletedFetches();
-            }
-        });
+        client.poll(timeout, now, () -> !fetcher.hasCompletedFetches());
 
         return fetcher.fetchedRecords();
     }

@@ -52,6 +52,7 @@ public class FetchRequest {
                 pairs.add(new Pair<>(new TopicPartition(topic,partitionId),new PartitionFetchInfo(offset,fetchSize)));
             }
         }
+        System.out.printf("Fetchrequest: versionId-%d, correlationId-%d%n",versionId,correlationId);
 
         return new FetchRequest(versionId, correlationId, clientId, replicaId, maxWait, minBytes, maxBytes,pairs);
     }

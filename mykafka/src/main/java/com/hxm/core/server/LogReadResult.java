@@ -1,7 +1,5 @@
 package com.hxm.core.server;
 
-import com.hxm.core.server.FetchDataInfo;
-
 public class LogReadResult {
     private final FetchDataInfo info;
     private final long hw;

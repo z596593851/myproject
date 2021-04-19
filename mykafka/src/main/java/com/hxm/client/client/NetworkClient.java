@@ -50,11 +50,9 @@ public class NetworkClient {
         String nodeConnectionId = node.idString();
         //判断网络是否建立好
         if (canSendRequest(nodeConnectionId)) {
-            //创建请求
-            RequestSend send=new RequestSend(nodeConnectionId,nextRequestHeader(ApiKeys.METADATA), MetadataRequest.allTopics().toStruct());
-            ClientRequest clientRequest = new ClientRequest(now,true,send,null);
-            //暂存发送请求
-            doSend(clientRequest, now);
+//            RequestSend send=new RequestSend(nodeConnectionId,nextRequestHeader(ApiKeys.METADATA), MetadataRequest.allTopics().toStruct());
+//            ClientRequest clientRequest = new ClientRequest(now,true,send,null);
+//            doSend(clientRequest, now);
         } else if (connectionStates.canConnect(nodeConnectionId,now)) {
             initiateConnect(node, now);
         }
@@ -77,6 +75,9 @@ public class NetworkClient {
         List<ClientResponse> responses = new ArrayList<>();
         handleCompletedSends(responses,updatedNow);
         handleCompletedReceives(responses,updatedNow);
+        handleConnections();
+        //处理长时间没有响应的请求（那5个）
+//        handleTimedOutRequests(responses, updatedNow);
         // invoke callbacks
         for (ClientResponse response : responses) {
             if (response.request().hasCallback()) {
@@ -183,6 +184,13 @@ public class NetworkClient {
 
     public void wakeup() {
         this.selector.wakeup();
+    }
+
+    private void handleConnections() {
+        for (String node : this.selector.connected()) {
+            log.debug("Completed connection to node {}", node);
+            this.connectionStates.connected(node);
+        }
     }
 
 }

@@ -102,10 +102,48 @@ public class Protocol {
             "An array of topics to fetch metadata for. If no topics are specified fetch metadata for all topics."));
     public static final Schema METADATA_REQUEST_V1=METADATA_REQUEST_V0;
     public static final Schema METADATA_REQUEST_V2=METADATA_REQUEST_V0;
+    public static final Schema PARTITION_METADATA_V0 = new Schema(new Field("partition_error_code",
+            INT16,
+            "The error code for the partition, if any."),
+            new Field("partition_id",
+                    INT32,
+                    "The id of the partition."),
+            new Field("leader",
+                    INT32,
+                    "The id of the broker acting as leader for this partition."),
+            new Field("replicas",
+                    new ArrayOf(INT32),
+                    "The set of all nodes that host this partition."),
+            new Field("isr",
+                    new ArrayOf(INT32),
+                    "The set of nodes that are in sync with the leader for this partition."));
+
+    public static final Schema METADATA_BROKER_V0 = new Schema(new Field("node_id", INT32, "The broker id."),
+            new Field("host", STRING, "The hostname of the broker."),
+            new Field("port", INT32,
+                    "The port on which the broker accepts requests."));
+    public static final Schema TOPIC_METADATA_V0 = new Schema(new Field("topic_error_code",
+            INT16,
+            "The error code for the given topic."),
+            new Field("topic", STRING, "The name of the topic"),
+            new Field("partition_metadata",
+                    new ArrayOf(PARTITION_METADATA_V0),
+                    "Metadata for each partition of the topic."));
+    public static final Schema METADATA_RESPONSE_V0 = new Schema(new Field("brokers",
+            new ArrayOf(METADATA_BROKER_V0),
+            "Host and port information for all brokers."),
+            new Field("topic_metadata",
+                    new ArrayOf(TOPIC_METADATA_V0)));
+
+
     public static final Schema[] PRODUCE_REQUEST = new Schema[] {PRODUCE_REQUEST_V0, PRODUCE_REQUEST_V1, PRODUCE_REQUEST_V2};
     public static final Schema[] PRODUCE_RESPONSE = new Schema[] {PRODUCE_RESPONSE_V0, PRODUCE_RESPONSE_V1, PRODUCE_RESPONSE_V2};
 
     public static final Schema[] METADATA_REQUEST = new Schema[] {METADATA_REQUEST_V0, METADATA_REQUEST_V1, METADATA_REQUEST_V2};
+
+    public static final Schema METADATA_RESPONSE_V1=METADATA_RESPONSE_V0;
+    public static final Schema METADATA_RESPONSE_V2=METADATA_RESPONSE_V0;
+    public static final Schema[] METADATA_RESPONSE = new Schema[] {METADATA_RESPONSE_V0, METADATA_RESPONSE_V1, METADATA_RESPONSE_V2};
 
     /* Offset fetch api */
 
@@ -216,6 +254,7 @@ public class Protocol {
 
         RESPONSES[ApiKeys.PRODUCE.id] = PRODUCE_RESPONSE;
         RESPONSES[ApiKeys.FETCH.id] = FETCH_RESPONSE;
+        RESPONSES[ApiKeys.METADATA.id] = METADATA_RESPONSE;
 
 
         /* set the minimum and maximum version of each api */

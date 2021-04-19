@@ -50,12 +50,14 @@ public class Log {
 
     public FetchDataInfo read(long startOffset, int maxLength, Long maxOffset, boolean minOneMessage){
         LogOffsetMetadata currentNextOffsetMetadata=nextOffsetMetadata;
+        //message的offset（最大offset）
         long next=currentNextOffsetMetadata.getMessageOffset();
-        //todo
-//        next=2;
+        System.out.printf("拉取offset: %d, 最大offset: %d",startOffset, next);
         if(startOffset==next){
             return new FetchDataInfo(currentNextOffsetMetadata, MessageSet.Empty,false);
         }
+        //返回与小于或等于给定键的最大键相关联的键值映射，如果没有此键，则 null
+        //segments在map中是以 startOffset-segment 形式存储的，所以这样可以拿到目标offset对应的segment
         Map.Entry<Long,LogSegment> entry=segments.floorEntry(startOffset);
         if(startOffset > next || entry == null){
             throw new RuntimeException(String.format("Request for offset %d but we only have log segments in the range %d to %d.",startOffset, segments.firstKey(), next));
@@ -65,8 +67,8 @@ public class Log {
             if (entry == segments.lastEntry()) {
                 long exposedPos = nextOffsetMetadata.getRelativePositionInSegment();
                 // Check the segment again in case a new segment has just rolled out.
-                // New log segment has rolled out, we can read up to the file end.
                 if (entry != segments.lastEntry()) {
+                    // New log segment has rolled out, we can read up to the file end.
                     maxPosition=(int)entry.getValue().size();
                 } else {
                     maxPosition=exposedPos;
