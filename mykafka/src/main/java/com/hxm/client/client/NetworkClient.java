@@ -149,8 +149,7 @@ public class NetworkClient {
         // Always expect the response version id to be the same as the request version id
         short apiKey = requestHeader.apiKey();
         short apiVer = requestHeader.apiVersion();
-        //todo
-        System.out.println(String.format("apiKey:%d , apiVer:%d",apiKey,apiVer));
+//        System.out.println(String.format("apiKey:%d , apiVer:%d",apiKey,apiVer));
         Struct responseBody = ProtoUtils.responseSchema(apiKey, apiVer).read(responseBuffer);
 //        Struct responseBody = ProtoUtils.responseSchema(1, 2).read(responseBuffer);
         correlate(requestHeader, responseHeader);

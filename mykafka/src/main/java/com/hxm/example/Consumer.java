@@ -10,9 +10,9 @@ public class Consumer {
     public static void main(String[] args) {
         KafkaConsumer<String,String> consumer=new KafkaConsumer<>();
         consumer.subscribe(Arrays.asList("liu"));
-        int count=5;
-        while (count-->0){
-            ConsumerRecords<String,String> consumerRecords=consumer.poll(0);
+        int count=4;
+        while (true){
+            ConsumerRecords<String,String> consumerRecords=consumer.poll(1000);
             for(ConsumerRecord<String,String> consumerRecord:consumerRecords){
                 System.out.println(consumerRecord.topic()+"--"+consumerRecord.value());
             }

@@ -52,7 +52,7 @@ public class Log {
         LogOffsetMetadata currentNextOffsetMetadata=nextOffsetMetadata;
         //message的offset（最大offset）
         long next=currentNextOffsetMetadata.getMessageOffset();
-        System.out.printf("拉取offset: %d, 最大offset: %d",startOffset, next);
+        System.out.println(String.format("拉取offset: %d, 最大offset: %d",startOffset, next));
         if(startOffset==next){
             return new FetchDataInfo(currentNextOffsetMetadata, MessageSet.Empty,false);
         }
@@ -163,6 +163,7 @@ public class Log {
         ByteBufferMessageSet validMessages=trimInvalidBytes(messages,appendInfo);
         //拿到最后一个索引项的offset。初始值是0
         LongRef offset=new LongRef(nextOffsetMetadata.getMessageOffset());
+        System.out.println("获取nextOffsetMetadata:"+offset.getValue());
         appendInfo.setFirstOffset(offset.getValue());
         //3、进一步验证并分配offset
         validMessages.validateMessagesAndAssignOffsets(offset);
@@ -178,6 +179,7 @@ public class Log {
         segment.append(appendInfo.getFirstOffset(), messages);
         //7、更新LEO
         updateLogEndOffset(appendInfo.getLastOffset()+1);
+        System.out.println(String.format("更新nextOffsetMetadata:%d",appendInfo.getLastOffset()+1));
         //8、检测未刷新到磁盘的数据是否达到一定阈值，如果是则调用flush()方法刷新
         if (unflushedMessages() >= 1) {
             flush();

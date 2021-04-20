@@ -78,6 +78,7 @@ public class ReplicaManager {
         //                        3) has enough data to respond
         //                        4) some error happens while reading data
         if (timeout <= 0 || bytesReadable >= fetchMinBytes) {
+            System.out.println(String.format("timeout:%d, bytesReadable:%d, fetchMinBytes:%d",timeout,bytesReadable,fetchMinBytes));
             List<Pair<TopicPartition, FetchResponsePartitionData>> list=new ArrayList<>();
             logReadResults.forEach(pair->{
                 TopicPartition tp=pair.getKey();
@@ -87,6 +88,7 @@ public class ReplicaManager {
             responseCallback.accept(list);
         }else {
             System.out.println("wrong");
+            System.out.println(String.format("timeout:%d, bytesReadable:%d, fetchMinBytes:%d",timeout,bytesReadable,fetchMinBytes));
         }
     }
 

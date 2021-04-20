@@ -66,6 +66,7 @@ public class ByteBufferMessageSet extends MessageSet {
         }
         //更新外层消息的offset，将其offset更新为内部消息的个数-1
         buffer.putLong(0,offsetCounter.addAndGet(validatedMessages.size())-1);
+        System.out.println("更新外层offset:"+offsetCounter.getValue());
         //更新外层消息的时间戳、attribute和CRC32
         //...
         buffer.rewind();

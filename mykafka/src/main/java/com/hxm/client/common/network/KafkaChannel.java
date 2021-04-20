@@ -23,7 +23,7 @@ public class KafkaChannel {
         }
         this.send = send;
         //绑定一个OP_WRITE事件
-        System.out.println("注册OP_WRITE");
+//        System.out.println("注册OP_WRITE");
         this.transportLayer.addInterestOps(SelectionKey.OP_WRITE);
     }
 

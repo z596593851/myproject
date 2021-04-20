@@ -237,14 +237,14 @@ public class KSelector {
                 }
                 //接收服务端发送回来的响应
                 if (key.isReadable() && !hasStagedReceive(channel)) {
-                    System.out.println("有read事件");
+//                    System.out.println("有read事件");
                     NetworkReceive networkReceive;
                     while ((networkReceive = channel.read()) != null) {
                         addToStagedReceives(channel, networkReceive);
                     }
                 }
                 if (key.isWritable()) {
-                    System.out.println("有write事件");
+//                    System.out.println("有write事件");
                     //给borker发送请求
                     Send send = channel.write();
                     if (send != null) {

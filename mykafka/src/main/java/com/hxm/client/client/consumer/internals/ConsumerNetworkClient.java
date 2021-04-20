@@ -112,7 +112,7 @@ public class ConsumerNetworkClient {
         firePendingCompletedRequests();
         trySend(now);
         if (pollCondition == null || pollCondition.shouldBlock()) {
-            client.poll(now);
+            client.poll(timeout);
         }
         firePendingCompletedRequests();
     }

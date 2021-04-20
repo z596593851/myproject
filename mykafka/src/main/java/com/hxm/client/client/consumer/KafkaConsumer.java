@@ -38,7 +38,7 @@ public class KafkaConsumer<K,V> {
         TopicPartition tp1=new TopicPartition("liu",0);
         subscriptions.assignFromSubscribed(asList(tp1));
         //todo 暂时手动提交offset。其实是由定时任务提交
-        subscriptions.seek(tp1,1);
+        subscriptions.seek(tp1,0);
 
 
         this.client=new ConsumerNetworkClient(networkClient);
@@ -95,7 +95,7 @@ public class KafkaConsumer<K,V> {
     private Map<TopicPartition, List<ConsumerRecord<K, V>>> pollOnce(long timeout) {
         //模仿其他请求，进行阻塞式调用
         //作为测试方案先poll一下以取消掉connect事件
-        client.poll();
+//        client.poll();
 
         //尝试从completedFetches缓存中解析消息
         Map<TopicPartition, List<ConsumerRecord<K, V>>> records = fetcher.fetchedRecords();
@@ -113,6 +113,17 @@ public class KafkaConsumer<K,V> {
         client.poll(timeout, now, () -> !fetcher.hasCompletedFetches());
 
         return fetcher.fetchedRecords();
+    }
+
+    public static void main(String[] args) {
+        SubscriptionState subscriptions=new SubscriptionState();
+        TopicPartition tp1=new TopicPartition("liu",0);
+        subscriptions.assignFromSubscribed(asList(tp1));
+        //todo 暂时手动提交offset。其实是由定时任务提交
+        subscriptions.seek(tp1,1);
+        subscriptions.movePartitionToEnd(tp1);
+        long position = subscriptions.position(tp1);
+        System.out.println(position);
     }
 
 }

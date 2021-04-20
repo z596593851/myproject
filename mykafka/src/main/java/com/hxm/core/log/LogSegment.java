@@ -113,7 +113,6 @@ public class LogSegment {
     }
 
     public FetchDataInfo read(long startOffset, Long maxOffset, int maxSize, long maxPosition, boolean minOneMessage){
-        //todo 0419
         if (maxSize < 0) {
             throw new IllegalArgumentException(String.format("Invalid max size for log read (%d)",maxSize));
         }
@@ -121,6 +120,7 @@ public class LogSegment {
             maxPosition=log.sizeInBytes();
         }
         int logSize=log.sizeInBytes();
+        //从log中找到对应指定offset
         OffsetPositionAndSize startOffsetAndSize=translateOffset(startOffset,0);
         if(startOffsetAndSize==null){
             return null;

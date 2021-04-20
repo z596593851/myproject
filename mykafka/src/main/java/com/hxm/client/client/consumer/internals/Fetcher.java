@@ -123,6 +123,7 @@ public class Fetcher<K, V>{
         while (recordsRemaining > 0) {
             if (nextInLineRecords == null || nextInLineRecords.isEmpty()) {
                 CompletedFetch completedFetch = completedFetches.poll();
+                System.out.println("poll-"+completedFetches.size());
                 if (completedFetch == null) {
                     break;
                 }
@@ -146,7 +147,7 @@ public class Fetcher<K, V>{
 
         if (!subscriptions.isAssigned(partitionRecords.partition)) {
             // this can happen when a rebalance happened before fetched records are returned to the consumer's poll call
-            log.debug("Not returning fetched records for partition {} since it is no longer assigned", partitionRecords.partition);
+            System.out.println(String.format("Not returning fetched records for partition {} since it is no longer assigned", partitionRecords.partition));
         } else {
             // note that the consumed position should always be available as long as the partition is still assigned
             long position = subscriptions.position(partitionRecords.partition);
@@ -159,10 +160,6 @@ public class Fetcher<K, V>{
                 List<ConsumerRecord<K, V>> partRecords = partitionRecords.take(maxRecords);
                 //最后一个消息的offset
                 long nextOffset = partRecords.get(partRecords.size() - 1).offset() + 1;
-
-                log.trace("Returning fetched records at offset {} for assigned partition {} and update " +
-                        "position to {}", position, partitionRecords.partition, nextOffset);
-
                 List<ConsumerRecord<K, V>> records = drained.get(partitionRecords.partition);
                 if (records == null) {
                     records = partRecords;
@@ -170,15 +167,15 @@ public class Fetcher<K, V>{
                 } else {
                     records.addAll(partRecords);
                 }
-
                 //更新subscriptionState中对应topicPartitionState的position字段
                 subscriptions.position(partitionRecords.partition, nextOffset);
+                System.out.println("更新要拉取的offset："+nextOffset);
                 return partRecords.size();
             } else {
                 // these records aren't next in line based on the last consumed position, ignore them
                 // they must be from an obsolete request
-                log.debug("Ignoring fetched records for {} at offset {} since the current position is {}",
-                        partitionRecords.partition, partitionRecords.fetchOffset, position);
+                System.out.println(String.format("Ignoring fetched records for {} at offset {} since the current position is {}",
+                        partitionRecords.partition, partitionRecords.fetchOffset, position));
             }
         }
 
@@ -314,7 +311,9 @@ public class Fetcher<K, V>{
                                 //存储在completedFetches队列中的消息数据还是未解析的FetchResponse.PartitionData对象
                                 //在fetchedRecords()方法中会将completedFetch中的消息进行解析，得到Record集合并返回
                                 //同时还会修改对应TopicPartitionState的position，为下次fetch操作做好准备。
+                                System.out.println("fetchOffset："+fetchOffset);
                                 completedFetches.add(new CompletedFetch(partition, fetchOffset, fetchData, partitions));
+                                System.out.println("add-"+completedFetches.size());
                             }
                         }
                         @Override
@@ -343,6 +342,7 @@ public class Fetcher<K, V>{
             }
             //下一次要拉取的offset
             long position = this.subscriptions.position(partition);
+//            System.out.println("要拉取的postition:"+position);
             //记录每个分区对应的position，即要fetch消息的offset
             fetch.put(partition, new FetchRequest.PartitionData(position, this.fetchSize));
         }

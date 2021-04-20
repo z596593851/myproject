@@ -120,6 +120,10 @@ public class FileMessageSet extends MessageSet {
         return null;
     }
 
+    /**
+     * 浅层遍历
+     * @return
+     */
     @Override
     public Iterator<MessageAndOffset> iterator() {
         return iterator(Integer.MAX_VALUE);
@@ -147,6 +151,7 @@ public class FileMessageSet extends MessageSet {
                 }
                 sizeOffsetBuffer.rewind();
                 long offset=sizeOffsetBuffer.getLong();
+//                System.out.println("外层offset："+offset);
                 int size=sizeOffsetBuffer.getInt();
                 if(size < Message.MIN_MESSAGE_OVERHEAD || location + sizeOffsetLength + size > end) {
                     return allDone();
